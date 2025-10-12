@@ -8,7 +8,7 @@
 <body class="bg-light p-4">
 
 <div class="container bg-white p-4 rounded shadow">
-    <h3 class="text-center mb-4">Orden de Compra</h3>
+    <h3 class="text-center mb-4">Orden de Comprasss</h3>
 
     <form>
         <div class="row mb-3">
