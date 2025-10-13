@@ -59,20 +59,37 @@
         }
 
         /* Botones del panel derecho */
-        .right-panel .btn-as-panel {
-            width:100%; /* ocupa todo el ancho del panel */
-            margin: 5px auto 5px 5px; /* deja margen a la izquierda y derecha */
-            margin-bottom: 8px; /* separación entre botones */
-            text-align:left;
-            display:flex; /* icono + texto en línea */
-            gap:10px; /* espacio entre icono y texto */
-            align-items:center; /* centrado vertical */
-            padding:8px;
-            font-weight:500;
-            border-radius:8px;
-            box-shadow: 0 3px 8px rgba(11,22,22,0.05);
-        }
+      .btn-as-panel {
+    display: flex;           /* Icono y texto en línea */
+    align-items: center;     /* Centrado vertical */
+    gap: 10px;               /* Espacio entre icono y texto */
+    padding: 8px 12px;       /* Espacio interno */
+    font-weight: 500;
+    border-radius: 8px;      /* Bordes redondeados */
+    text-decoration: none;   /* Quitar subrayado */
+    color: #000;             /* Color del texto */
+    background: #fff;        /* Fondo base (opcional) */
+    box-shadow: 0 3px 8px rgba(11,22,22,0.05);
+    margin-bottom: 8px;      /* Separación entre botones */
+    transition: transform 0.1s, box-shadow 0.2s;
+}
+/* Hover efecto */
+.btn-as-panel:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(11,22,22,0.1);
+}
 
+/* Iconos dentro de los botones */
+.btn-as-panel .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    color: white;
+    font-size: 16px;
+}
         /* ---------------- TABLA Y ENTRADAS ---------------- */
         .table-responsive {
             max-height: 1000px; /* altura máxima para scroll */
@@ -177,7 +194,7 @@
         <div class="d-flex align-items-center mb-1">
             <label for="proveedor" class="form-label fw-bold me-2 mb-0 text-end" style="width: 120px; font-size: 14px;">Proveedor:</label>
             <div class="input-group input-group-sm" style="max-width: 400px;">
-                <input id="proveedor" type="text" class="form-control shadow-sm" placeholder="Buscar proveedor...">
+                <input id="proveedor" type="text" class="form-control shadow-sm" placeholder="Proveedor...">
                 <button type="button" class="btn btn-outline-primary btn-sm" title="Buscar proveedor" onclick="abrirBusqueda('proveedor')">🔍</button>
             </div>
         </div>
@@ -319,30 +336,42 @@
         </div>
 
         <!-- Panel derecho con botones de acciones -->
-        <div class="col-lg-1">
-            <div class="right-panel">
-                <div class="mb-1">
-                    <button type="button" class="btn-as-panel btn-informe" onclick="accionPanel('Informe Detallado')">
-                        <span class="icon btn-informe" style="background: linear-gradient(90deg,#3b82f6,#06b6d4)">📝</span>
-                        Informe detallado
-                    </button>
-                    <button type="button" class="btn-as-panel btn-compra" onclick="accionPanel('Compras a un proveedor')">
-                        <span class="icon btn-compra" style="background: linear-gradient(90deg,#06b6d4,#10b981)">🏷️</span>
-                        Compras a un proveedor
-                    </button>
-                    <button type="button" class="btn-as-panel btn-resumen" onclick="accionPanel('Resumen por proveedor')">
-                        <span class="icon btn-resumen" style="background: linear-gradient(90deg,#f59e0b,#06b6d4)">📊</span>
-                        Resumen por proveedor
-                    </button>
-                    <button type="button" class="btn-as-panel btn-informe-simple" onclick="accionPanel('Informe')">
-                        <span class="icon btn-informe-simple" style="background: linear-gradient(90deg,#6366f1,#06b6d4)">📄</span>
-                        Informe
-                    </button>
-                    <button type="button" class="btn-as-panel btn-transparencia" onclick="accionPanel('Transparencia')">
-                        <span class="icon btn-transparencia" style="background: linear-gradient(90deg,#ef4444,#06b6d4)">🔎</span>
-                        Transparencia
-                    </button>
-                </div>
+      <div class="col-lg-1">
+    <div class="right-panel">
+        <div class="mb-1">
+            <!-- Informe Detallado -->
+          <a href="{{ route('informe.detallado') }}" class="btn-as-panel btn-informe">
+    <span class="icon btn-informe" style="background: linear-gradient(90deg,#3b82f6,#06b6d4)">📝</span>
+    Informe detallado
+</a>
+
+            <!-- Compras a un proveedor -->
+            <a href="{{ route('compras.proveedor') }}" class="btn-as-panel btn-compra">
+                <span class="icon btn-compra" style="background: linear-gradient(90deg,#06b6d4,#10b981)">🏷️</span>
+                Compras a un proveedor
+            </a>
+
+            <!-- Resumen por proveedor -->
+            <a href="{{ route('resumen.proveedor') }}" class="btn-as-panel btn-resumen">
+                <span class="icon btn-resumen" style="background: linear-gradient(90deg,#f59e0b,#06b6d4)">📊</span>
+                Resumen por proveedor
+            </a>
+
+            <!-- Informe -->
+            <a href="{{ route('informe') }}" class="btn-as-panel btn-informe-simple">
+                <span class="icon btn-informe-simple" style="background: linear-gradient(90deg,#6366f1,#06b6d4)">📄</span>
+                Informe
+            </a>
+
+            <!-- Transparencia -->
+            <a href="{{ route('transparencia') }}" class="btn-as-panel btn-transparencia">
+                <span class="icon btn-transparencia" style="background: linear-gradient(90deg,#ef4444,#06b6d4)">🔎</span>
+                Transparencia
+            </a>
+        </div>
+    </div>
+</div>
+
 
               
             </div>
