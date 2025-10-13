@@ -310,7 +310,39 @@
                     </div>
                 </div>
 
-            
+            <script>
+function agregarFila() {
+    // Seleccionamos el tbody de la tabla
+    const tbody = document.querySelector('#itemsTable tbody');
+
+    // Creamos una nueva fila
+    const fila = document.createElement('tr');
+
+    // Contenido de la fila (igual que tus filas iniciales)
+    fila.innerHTML = `
+        <td><input type="number" min="0" step="1" class="form-control no-arrows qty" /></td>
+        <td class="d-flex align-items-center">
+            <input type="text" class="form-control desc me-3" placeholder="Descripción del artículo" />
+            <input type="checkbox" class="form-check-input small-checkbox" title="Aplica descuento?" />
+        </td>
+        <td><input type="text" class="form-control unidad" /></td>
+        <td><input type="number" inputmode="decimal" step="0.01" class="form-control no-arrows price" /></td>
+        <td><input type="number" inputmode="decimal" step="0.01" class="form-control no-arrows discount" /></td>
+        <td><input type="text" class="valor-read" readonly value="0.00" /></td>
+        <td class="text-center"><button class="btn btn-sm btn-danger" onclick="eliminarFila(this)">X</button></td>
+    `;
+
+    // Añadimos la fila al tbody
+    tbody.appendChild(fila);
+}
+
+// Función para eliminar fila
+function eliminarFila(boton) {
+    const fila = boton.closest('tr');
+    fila.remove();
+}
+</script>
+
                 <!-- Totales -->
                 <div style="width:260px;">
                     <div class="totals-panel">
