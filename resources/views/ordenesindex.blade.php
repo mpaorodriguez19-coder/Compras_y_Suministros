@@ -179,42 +179,65 @@
             <h4 class="m-0">Orden de Compra</h4>
         </div>
     </div>
+   
 
 <!-- ---------------- FORMULARIO DE ENCABEZADO ---------------- -->
 <form id="ordenForm" onsubmit="guardar(event)">
-    <div class="p-2 rounded shadow-sm bg-light" style="max-width: 600px;">
+  <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
 
-        <!-- Fecha -->
-        <div class="d-flex align-items-center mb-1">
-            <label for="fecha" class="form-label fw-bold me-2 mb-0 text-end" style="width: 120px; font-size: 14px;">Fecha:</label>
-            <input id="fecha" type="date" class="form-control form-control-sm shadow-sm" style="max-width: 200px;">
+    <!-- FORMULARIO IZQUIERDA -->
+    <div class="p-2 rounded shadow-sm bg-light flex-grow-1" style="max-width: 600px;">
+      <!-- Fecha -->
+      <div class="d-flex align-items-center mb-1">
+        <label for="fecha" class="form-label fw-bold me-2 mb-0 text-end" style="width: 120px; font-size: 14px;">Fecha:</label>
+        <input id="fecha" type="date" class="form-control form-control-sm shadow-sm" style="max-width: 200px;">
+      </div>
+
+      <!-- Proveedor -->
+      <div class="d-flex align-items-center mb-1">
+        <label for="proveedor" class="form-label fw-bold me-2 mb-0 text-end" style="width: 120px; font-size: 14px;">Proveedor:</label>
+        <div class="input-group input-group-sm" style="max-width: 400px;">
+          <input id="proveedor" type="text" class="form-control shadow-sm" placeholder="Proveedor...">
+          <button type="button" class="btn btn-outline-primary btn-sm" title="Buscar proveedor" onclick="abrirBusqueda('proveedor')">🔍</button>
         </div>
+      </div>
 
-        <!-- Proveedor -->
-        <div class="d-flex align-items-center mb-1">
-            <label for="proveedor" class="form-label fw-bold me-2 mb-0 text-end" style="width: 120px; font-size: 14px;">Proveedor:</label>
-            <div class="input-group input-group-sm" style="max-width: 400px;">
-                <input id="proveedor" type="text" class="form-control shadow-sm" placeholder="Proveedor...">
-                <button type="button" class="btn btn-outline-primary btn-sm" title="Buscar proveedor" onclick="abrirBusqueda('proveedor')">🔍</button>
-            </div>
+      <!-- Lugar -->
+      <div class="d-flex align-items-center mb-1">
+        <label for="lugar" class="form-label fw-bold me-2 mb-0 text-end" style="width: 120px; font-size: 14px;">Lugar:</label>
+        <input id="lugar" type="text" class="form-control form-control-sm shadow-sm" placeholder="Sede / ubicación" style="max-width: 400px;">
+      </div>
+
+      <!-- Solicitado por -->
+      <div class="d-flex align-items-center mb-1">
+        <label for="solicitado" class="form-label fw-bold me-2 mb-0 text-end" style="width: 120px; font-size: 14px;">Solicitado por:</label>
+        <div class="input-group input-group-sm" style="max-width: 400px;">
+          <input id="solicitado" type="text" class="form-control shadow-sm" placeholder="Usuario solicitante...">
+          <button type="button" class="btn btn-outline-primary btn-sm" title="Buscar usuario" onclick="abrirBusqueda('solicitado')">🔍</button>
         </div>
-
-        <!-- Lugar -->
-        <div class="d-flex align-items-center mb-1">
-            <label for="lugar" class="form-label fw-bold me-2 mb-0 text-end" style="width: 120px; font-size: 14px;">Lugar:</label>
-            <input id="lugar" type="text" class="form-control form-control-sm shadow-sm" placeholder="Sede / ubicación" style="max-width: 400px;">
-        </div>
-
-        <!-- Solicitado por -->
-        <div class="d-flex align-items-center mb-1">
-            <label for="solicitado" class="form-label fw-bold me-2 mb-0 text-end" style="width: 120px; font-size: 14px;">Solicitado por:</label>
-            <div class="input-group input-group-sm" style="max-width: 400px;">
-                <input id="solicitado" type="text" class="form-control shadow-sm" placeholder="Usuario solicitante...">
-                <button type="button" class="btn btn-outline-primary btn-sm" title="Buscar usuario" onclick="abrirBusqueda('solicitado')">🔍</button>
-            </div>
-        </div>
-
+      </div>
     </div>
+
+
+      <!-- Fila con Orden en Espera y Reponer -->
+      <div class="d-flex justify-content-between gap-2 mb-2">
+        <!-- ORDEN EN ESPERA -->
+        <a href="{{ route('orden.espera') }}" class="btn-as-panel flex-fill text-center">
+          <span class="icon" style="background: linear-gradient(90deg,#f97316,#fb923c)">⏳</span>
+          <div>Orden en espera</div>
+        </a>
+
+        <!-- REPONER -->
+        <a href="{{ route('orden.reponer') }}" class="btn-as-panel flex-fill text-center">
+          <span class="icon" style="background: linear-gradient(90deg,#10b981,#34d399)">♻️</span>
+          <div>Reponer</div>
+        </a>
+      </div>
+      
+
+
+  </div>
+</form>
 
     <!-- ---------------- SECCION TABLA Y PANEL DERECHO ---------------- -->
     <div class="row">
@@ -304,9 +327,7 @@
                     <textarea id="concepto" rows="3" class="form-control"></textarea>
                     <div class="mt-2">
                         <button type="button" class="btn btn-outline-primary btn-sm" onclick="agregarFila()">+ Agregar fila</button>
-                    <!-- botones Guardar / Cancelar -->
-                    <button type="submit" class="btn btn-save btn-sm">Guardar</button>
-            <button type="button" class="btn btn-reset btn-sm" onclick="resetForm()">Cancelar</button>
+             
                     </div>
                 </div>
 
@@ -367,47 +388,69 @@ function eliminarFila(boton) {
             </div>
         </div>
 
-        <!-- Panel derecho con botones de acciones -->
-      <div class="col-lg-1">
+    <!-- Panel derecho con botones de acciones -->
+<div class="col-lg-1">
     <div class="right-panel">
         <div class="mb-1">
-            <!-- Informe Detallado -->
-          <a href="{{ route('informe.detallado') }}" class="btn-as-panel btn-informe">
-    <span class="icon btn-informe" style="background: linear-gradient(90deg,#3b82f6,#06b6d4)">📝</span>
-    Informe detallado
-</a>
+  <!-- LINK (debajo) -->
+      <a href="#" class="btn-as-panel w-100 mb-2 text-center">
+        <span class="icon" style="background: linear-gradient(90deg,#06b6d4,#3b82f6)">🔗</span>
+        <div>Link</div>
+      </a>
 
-            <!-- Compras a un proveedor -->
-            <a href="{{ route('compras.proveedor') }}" class="btn-as-panel btn-compra">
-                <span class="icon btn-compra" style="background: linear-gradient(90deg,#06b6d4,#10b981)">🏷️</span>
-                Compras a un proveedor
-            </a>
-
-            <!-- Resumen por proveedor -->
-            <a href="{{ route('resumen.proveedor') }}" class="btn-as-panel btn-resumen">
-                <span class="icon btn-resumen" style="background: linear-gradient(90deg,#f59e0b,#06b6d4)">📊</span>
-                Resumen por proveedor
-            </a>
-
-            <!-- Informe -->
-            <a href="{{ route('informe') }}" class="btn-as-panel btn-informe-simple">
-                <span class="icon btn-informe-simple" style="background: linear-gradient(90deg,#6366f1,#06b6d4)">📄</span>
-                Informe
-            </a>
-
-            <!-- Transparencia -->
-            <a href="{{ route('transparencia') }}" class="btn-as-panel btn-transparencia">
-                <span class="icon btn-transparencia" style="background: linear-gradient(90deg,#ef4444,#06b6d4)">🔎</span>
-                Transparencia
-            </a>
-        </div>
-    </div>
+<!-- Revisar -->
+<div class="btn-as-panel p-2 text-start">
+    <input type="number" id="numeroBuscar" class="form-control form-control-sm shadow-sm mb-2" placeholder="N°" style="border-radius:6px;">
+    <button type="button" class="btn btn-outline-primary btn-sm w-100">Revisar</button>
 </div>
 
 
-              
-            </div>
+            <!-- INFORME DETALLADO -->
+            <a href="{{ route('informe.detallado') }}" class="btn-as-panel">
+                <span class="icon" style="background: linear-gradient(90deg,#3b82f6,#06b6d4)">📝</span>
+                Informe detallado
+            </a>
+
+            <!-- COMPRAS A UN PROVEEDOR -->
+            <a href="{{ route('compras.proveedor') }}" class="btn-as-panel">
+                <span class="icon" style="background: linear-gradient(90deg,#06b6d4,#10b981)">🏷️</span>
+                Compras a un proveedor
+            </a>
+
+            <!-- RESUMEN POR PROVEEDOR -->
+            <a href="{{ route('resumen.proveedor') }}" class="btn-as-panel">
+                <span class="icon" style="background: linear-gradient(90deg,#f59e0b,#06b6d4)">📊</span>
+                Resumen por proveedor
+            </a>
+
+            <!-- INFORME -->
+            <a href="{{ route('informe') }}" class="btn-as-panel">
+                <span class="icon" style="background: linear-gradient(90deg,#6366f1,#06b6d4)">📄</span>
+                Informe
+            </a>
+
+            <!-- TRANSPARENCIA -->
+            <a href="{{ route('transparencia') }}" class="btn-as-panel">
+                <span class="icon" style="background: linear-gradient(90deg,#ef4444,#06b6d4)">🔎</span>
+                Transparencia
+            </a>
+
         </div>
+    </div>
+</div>
+<!-- Botones Guardar / Cancelar centrados con estilo moderno -->
+<div class="d-flex justify-content-center gap-2 mt-2">
+    <button type="submit" class="btn btn-success btn-sm" 
+            style="border-radius:6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 0.35rem 0.75rem;">
+        Guardar
+    </button>
+    <button type="button" class="btn btn-secondary btn-sm" onclick="resetForm()" 
+            style="border-radius:6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 0.35rem 0.75rem;">
+        Cancelar
+    </button>
+</div>
+
+        </div>       
     </div>
 </form>
 </div>
