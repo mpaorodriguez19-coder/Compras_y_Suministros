@@ -173,13 +173,11 @@
 <!-- ---------------- CONTENEDOR PRINCIPAL ---------------- -->
 <div class="container main-card">
 
-    <!-- Barra superior con título -->
-    <div class="header-bar">
-        <div>
-            <h4 class="m-0">Orden de Compra</h4>
-        </div>
-    </div>
-   
+  <!-- Barra superior con título centrado -->
+<div class="header-bar text-center">
+    <h4 class="m-0">Orden de Compra</h4>
+</div>
+
 
 <!-- ---------------- FORMULARIO DE ENCABEZADO ---------------- -->
 <form id="ordenForm" onsubmit="guardar(event)">
@@ -218,26 +216,10 @@
       </div>
     </div>
 
-
-      <!-- Fila con Orden en Espera y Reponer -->
-      <div class="d-flex justify-content-between gap-2 mb-2">
-        <!-- ORDEN EN ESPERA -->
-        <a href="{{ route('orden.espera') }}" class="btn-as-panel flex-fill text-center">
-          <span class="icon" style="background: linear-gradient(90deg,#f97316,#fb923c)">⏳</span>
-          <div>Orden en espera</div>
-        </a>
-
-        <!-- REPONER -->
-        <a href="{{ route('orden.reponer') }}" class="btn-as-panel flex-fill text-center">
-          <span class="icon" style="background: linear-gradient(90deg,#10b981,#34d399)">♻️</span>
-          <div>Reponer</div>
-        </a>
-      </div>
-      
-
-
   </div>
 </form>
+
+
 
     <!-- ---------------- SECCION TABLA Y PANEL DERECHO ---------------- -->
     <div class="row">
@@ -388,56 +370,71 @@ function eliminarFila(boton) {
             </div>
         </div>
 
-    <!-- Panel derecho con botones de acciones -->
+<!-- Panel derecho con botones de acciones -->
 <div class="col-lg-1">
     <div class="right-panel">
         <div class="mb-1">
-  <!-- LINK (debajo) -->
-      <a href="#" class="btn-as-panel w-100 mb-2 text-center">
-        <span class="icon" style="background: linear-gradient(90deg,#06b6d4,#3b82f6)">🔗</span>
-        <div>Link</div>
-      </a>
 
-<!-- Revisar -->
-<div class="btn-as-panel p-2 text-start">
-    <input type="number" id="numeroBuscar" class="form-control form-control-sm shadow-sm mb-2" placeholder="N°" style="border-radius:6px;">
-    <button type="button" class="btn btn-outline-primary btn-sm w-100">Revisar</button>
-</div>
+        
+            <!-- ORDEN EN ESPERA -->
+            <a href="{{ route('orden.espera') }}" class="btn-as-panel mb-2">
+                <span class="icon" style="background: linear-gradient(90deg,#f97316,#fb923c)">⏳</span>
+                Orden en espera
+            </a>
 
+            <!-- REPONER -->
+            <a href="{{ route('orden.reponer') }}" class="btn-as-panel mb-2">
+                <span class="icon" style="background: linear-gradient(90deg,#10b981,#34d399)">♻️</span>
+                Reponer
+            </a>
+
+            <!-- LINK -->
+            <a href="#" class="btn-as-panel w-100 mb-2 text-center">
+                <span class="icon" style="background: linear-gradient(90deg,#06b6d4,#3b82f6)">🔗</span>
+                <div>Link</div>
+            </a>
+
+            <!-- Revisar -->
+            <div class="btn-as-panel p-2 text-start mb-2">
+                <input type="number" id="numeroBuscar" class="form-control form-control-sm shadow-sm mb-2" placeholder="N°" style="border-radius:6px;">
+                <button type="button" class="btn btn-outline-primary btn-sm w-100">Revisar</button>
+            </div>
 
             <!-- INFORME DETALLADO -->
-            <a href="{{ route('informe.detallado') }}" class="btn-as-panel">
+            <a href="{{ route('informe.detallado') }}" class="btn-as-panel mb-2">
                 <span class="icon" style="background: linear-gradient(90deg,#3b82f6,#06b6d4)">📝</span>
                 Informe detallado
             </a>
 
             <!-- COMPRAS A UN PROVEEDOR -->
-            <a href="{{ route('compras.proveedor') }}" class="btn-as-panel">
+            <a href="{{ route('compras.proveedor') }}" class="btn-as-panel mb-2">
                 <span class="icon" style="background: linear-gradient(90deg,#06b6d4,#10b981)">🏷️</span>
                 Compras a un proveedor
             </a>
 
             <!-- RESUMEN POR PROVEEDOR -->
-            <a href="{{ route('resumen.proveedor') }}" class="btn-as-panel">
+            <a href="{{ route('resumen.proveedor') }}" class="btn-as-panel mb-2">
                 <span class="icon" style="background: linear-gradient(90deg,#f59e0b,#06b6d4)">📊</span>
                 Resumen por proveedor
             </a>
 
             <!-- INFORME -->
-            <a href="{{ route('informe') }}" class="btn-as-panel">
+            <a href="{{ route('informe') }}" class="btn-as-panel mb-2">
                 <span class="icon" style="background: linear-gradient(90deg,#6366f1,#06b6d4)">📄</span>
                 Informe
             </a>
 
             <!-- TRANSPARENCIA -->
-            <a href="{{ route('transparencia') }}" class="btn-as-panel">
+            <a href="{{ route('transparencia') }}" class="btn-as-panel mb-2">
                 <span class="icon" style="background: linear-gradient(90deg,#ef4444,#06b6d4)">🔎</span>
                 Transparencia
             </a>
 
+
         </div>
     </div>
 </div>
+
 <!-- Botones Guardar / Cancelar centrados con estilo moderno -->
 <div class="d-flex justify-content-center gap-2 mt-2">
     <button type="submit" class="btn btn-success btn-sm" 
