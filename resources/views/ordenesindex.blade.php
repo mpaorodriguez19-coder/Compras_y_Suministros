@@ -327,26 +327,52 @@ input, select, textarea {
       </div>
 
       <!-- Panel derecho -->
-      <div class="col-lg-2 ps-0">
-          <div class="right-panel position-sticky" style="top:0;">
-              <div class="d-flex flex-column mb-2">
-                  <input type="number" id="numeroBuscar" class="form-control shadow-sm mb-1" placeholder="N°" style="border-radius:6px; height:38px; font-size:14px;"/>
-                  <button type="button" class="btn btn-outline-primary w-100" style="height:38px; font-size:14px;">Revisar</button>
-              </div>
+   <div class="col-lg-2 ps-0">
+    <div class="right-panel position-sticky" style="top:0;">
+        <div class="d-flex flex-column mb-2">
+            <input type="number" id="numeroBuscar" class="form-control shadow-sm mb-1"
+                   placeholder="N°" style="border-radius:6px; height:38px; font-size:14px;"/>
+            <button type="button" class="btn btn-outline-primary w-100"
+                    style="height:38px; font-size:14px;">Revisar</button>
+        </div>
 
-              <a href="#" class="btn-as-panel"><span class="icon" style="background: linear-gradient(90deg,#f97316,#fb923c)">⏳</span>Orden en espera</a>
-              <a href="#" class="btn-as-panel"><span class="icon" style="background: linear-gradient(90deg,#10b981,#34d399)">♻️</span>Reponer</a>
-              <a href="#" class="btn-as-panel w-100 text-center"><span class="icon" style="background: linear-gradient(90deg,#06b6d4,#3b82f6)">🔗</span>Link</a>
-              <a href="#" class="btn-as-panel"><span class="icon" style="background: linear-gradient(90deg,#3b82f6,#06b6d4)">📝</span>Informe detallado</a>
-              <a href="#" class="btn-as-panel"><span class="icon" style="background: linear-gradient(90deg,#06b6d4,#10b981)">🏷️</span>Compras proveedor</a>
-              <a href="#" class="btn-as-panel"><span class="icon" style="background: linear-gradient(90deg,#f59e0b,#06b6d4)">📊</span>Resumen proveedor</a>
-              <a href="#" class="btn-as-panel"><span class="icon" style="background: linear-gradient(90deg,#6366f1,#06b6d4)">📄</span>Informe</a>
-              <a href="#" class="btn-as-panel"><span class="icon" style="background: linear-gradient(90deg,#ef4444,#06b6d4)">🔎</span>Transparencia</a>
-          </div>
-         
-      </div>
-      
-  </div>
+        <a href="{{ route('orden.espera') }}" class="btn-as-panel">
+            <span class="icon" style="background: linear-gradient(90deg,#f97316,#fb923c)">⏳</span>
+            Orden en espera
+        </a>
+
+        <a href="{{ route('orden.reponer') }}" class="btn-as-panel">
+            <span class="icon" style="background: linear-gradient(90deg,#10b981,#34d399)">♻️</span>
+            Reponer
+        </a>
+
+        <a href="{{ route('informe.detallado') }}" class="btn-as-panel w-100 text-center">
+            <span class="icon" style="background: linear-gradient(90deg,#06b6d4,#3b82f6)">🔗</span>
+            Informe detallado
+        </a>
+
+        <a href="{{ route('compras.proveedor') }}" class="btn-as-panel">
+            <span class="icon" style="background: linear-gradient(90deg,#06b6d4,#10b981)">🏷️</span>
+            Compras proveedor
+        </a>
+
+        <a href="{{ route('resumen.proveedor') }}" class="btn-as-panel">
+            <span class="icon" style="background: linear-gradient(90deg,#f59e0b,#06b6d4)">📊</span>
+            Resumen proveedor
+        </a>
+
+        <a href="{{ route('informe') }}" class="btn-as-panel">
+            <span class="icon" style="background: linear-gradient(90deg,#6366f1,#06b6d4)">📄</span>
+            Informe
+        </a>
+
+        <a href="{{ route('transparencia') }}" class="btn-as-panel">
+            <span class="icon" style="background: linear-gradient(90deg,#ef4444,#06b6d4)">🔎</span>
+            Transparencia
+        </a>
+    </div>
+</div>
+
 <script>
 function agregarFila() {
     const tbody = document.querySelector('#itemsTable tbody');
