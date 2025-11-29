@@ -28,3 +28,9 @@ Route::get('/resumen-proveedor', [PanelController::class, 'resumenProveedor'])->
 Route::get('/informe', [PanelController::class, 'informe'])->name('informe');
 Route::get('/transparencia', [PanelController::class, 'transparencia'])->name('transparencia');
 
+// Rutas de botón reponer
+Route::get('/orden/reponer/{id}', [OrdenController::class, 'reponer'])->name('orden.reponer.id');
+Route::post('/orden/store', [OrdenController::class, 'store'])->name('orden.store');
+
+
+
