@@ -338,7 +338,7 @@ input, select, textarea {
 
         <a href="{{ route('orden.espera') }}" class="btn-as-panel">
             <span class="icon" style="background: linear-gradient(90deg,#f97316,#fb923c)">⏳</span>
-            Orden en espera
+           Rep 2
         </a>
 
         <a href="{{ route('orden.reponer') }}" class="btn-as-panel">

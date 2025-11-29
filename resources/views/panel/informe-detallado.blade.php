@@ -3,14 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Informe de Órdenes de Compra</title>
-
     <style>
+        /* ========= OPCIÓN 2: Estilo tipo PDF A4 ========= */
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
-            background: white;
+            background: #f0f0f0; /* Fondo gris para simular escritorio */
+            display: flex;
+            justify-content: center;
+            padding: 20px;
         }
 
+        .informe {
+            width: 216mm;        /* Ancho carta */
+            min-height: 279mm;   /* Alto carta */
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3); /* Sombra tipo hoja */
+            box-sizing: border-box;
+        }
+
+
+        /* ================= ESTILOS EXISTENTES ================= */
         .encabezado {
             width: 100%;
             display: flex;
@@ -66,71 +79,116 @@
         th {
             background-color: #eaeaea;
         }
+
+        /* Botón de imprimir */
+        .btn-imprimir {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            z-index: 1000;
+        }
+
+        .btn-imprimir:hover {
+            background-color: #0056b3;
+        }
+
+        /* Asegurar que el botón no aparezca al imprimir */
+        @media print {
+            .btn-imprimir {
+                display: none;
+            }
+
+            body {
+                background: white;
+            }
+
+            .informe {
+                box-shadow: none;
+                width: auto;
+                min-height: auto;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- ================= ENCABEZADO ================= -->
-    <div class="encabezado">
+    <!-- Botón de imprimir -->
+    <button class="btn-imprimir" onclick="imprimirInforme()">🖨 Imprimir</button>
 
-        <!-- LOGO IZQUIERDO -->
-        <div>
-            <img src="imagenes/logo_izq.png" class="logo">
+    <!-- CONTENEDOR TIPO PDF -->
+    <div class="informe">
+
+        <!-- ================= ENCABEZADO ================= -->
+        <div class="encabezado">
+
+            <!-- LOGO IZQUIERDO -->
+            <div>
+                <img src="imagenes/logo_izq.png" class="logo">
+            </div>
+
+            <!-- CENTRO -->
+            <div class="centro">
+                <h1>MUNICIPALIDAD DE DANLÍ, EL PARAÍSO</h1>
+                <h2>INFORME DETALLADO DE ÓRDENES DE COMPRA</h2>
+                <div class="periodo">
+                    PERÍODO DEL: <span id="periodoDesde">01/02/2025</span>
+                    AL <span id="periodoHasta">15/02/2025</span>
+                </div>
+            </div>
+
+            <!-- DERECHA: FECHA Y PAGINA -->
+            <div class="info-der">
+                <img src="imagenes/logo_der.jpeg" class="logo"><br><br> 
+                Fecha: <span id="fechaActual"></span><br>
+                Página: 1
+            </div>
+
         </div>
 
-        <!-- CENTRO -->
-        <div class="centro">
-            <h1>MUNICIPALIDAD DE DANLÍ, EL PARAÍSO</h1>
-            <h2>INFORME DETALLADO DE ÓRDENES DE COMPRA</h2>
-        </div>
+        <!-- ================= LINEA DIVISORA ================= -->
+        <div class="linea"></div>
 
-        <!-- DERECHA: FECHA Y PAGINA -->
-        <div class="info-der">
-            <img src="imagenes/logo_der.jpeg" class="logo"><br>
-            Fecha: <span id="fechaActual"></span><br>
-            Página: 1
-        </div>
+        <!-- =================  COMIENZA LA TABLA ================= -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Factura</th>
+                    <th>Nombre</th>
+                    <th>Concepto</th>
+                    <th>Cantidad</th>
+                    <th>Precio L.</th>
+                    <th>Impto L.</th>
+                    <th>Valor L.</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- VACÍO -->
+            </tbody>
+        </table>
 
-    </div>
+    </div> <!-- FIN CONTENEDOR INFORME -->
 
-    <!-- ================= PERIODO (ANTES DE LA LINEA) ================= -->
-    <div class="periodo">
-        PERÍODO DEL: <span id="periodoDesde">01/02/2025</span>
-        AL <span id="periodoHasta">15/02/2025</span>
-    </div>
-
-    <!-- ================= LINEA ================= -->
-    <div class="linea"></div>
-
-    <!-- ================= TABLA ================= -->
-    <table>
-        <thead>
-            <tr>
-                <th>Fecha</th>
-                <th>Factura</th>
-                <th>Nombre</th>
-                <th>Concepto</th>
-                <th>Cantidad</th>
-                <th>Precio L.</th>
-                <th>Impto L.</th>
-                <th>Valor L.</th>
-                <th>Total L.</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- VACÍO -->
-        </tbody>
-    </table>
-
-    <!-- ================= FECHA AUTOMATICA Y PERIODO ================= -->
     <script>
+        // Fecha automática
         const hoy = new Date();
         document.getElementById("fechaActual").textContent =
             hoy.toLocaleDateString("es-HN");
 
-        // ESTAS FECHAS LAS PUEDES CAMBIAR DESDE TU SISTEMA PRINCIPAL
-        document.getElementById("periodoDesde").textContent = "01/02/2025";
-        document.getElementById("periodoHasta").textContent = "15/02/2025";
+        // Función de imprimir
+        function imprimirInforme() {
+            const btn = document.querySelector('.btn-imprimir');
+            btn.style.display = 'none';  // Ocultar botón
+            window.print();
+            btn.style.display = 'block';  // Volver a mostrar
+        }
     </script>
 
 </body>
