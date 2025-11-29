@@ -165,8 +165,8 @@
                     <th>Nombre</th>
                  <th>Valor L.</th>
                     <th>Descripcion</th>
-                    <th>Oservaciones</th>
-                    <th>Fallas</th>
+                    <th>Observaciones</th>
+                    <th>Faltas</th>
               
                 </tr>
             </thead>
