@@ -1,77 +1,158 @@
-@extends('layouts.app')
-@section('title','Orden - Reponer')
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Orden de Compra</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            margin: 40px;
+        }
 
-@section('content')
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-body">
-            <h2 class="text-center mb-4">Orden de Compra - Reponer</h2>
+        .titulo-centro {
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
 
-            @if(session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
+        .tabla-header {
+            width: 100%;
+            margin-top: 10px;
+        }
 
-            <form id="ordenForm" method="POST" action="{{ route('orden.store') }}">
-                @csrf
+        .tabla-header td {
+            vertical-align: top;
+        }
 
-                <div class="row mb-3">
-                    <div class="col-md-3">
-                        <label for="fecha" class="form-label"><strong>Fecha:</strong></label>
-                        <input type="date" name="fecha" id="fecha" class="form-control"
-                               value="{{ old('fecha', date('Y-m-d')) }}" required>
-                    </div>
+        .tabla-detalle {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
 
-                    <div class="col-md-4">
-                        <label class="form-label"><strong>Proveedor:</strong></label>
-                        <div class="input-group">
-                            <select name="proveedor_id" id="proveedor_id" class="form-control">
-                                <option value="">-- Proveedor --</option>
-                                @foreach($proveedores as $p)
-                                    <option value="{{ $p->id }}">{{ $p->nombre }}</option>
-                                @endforeach
-                            </select>
-                            <button type="button" class="btn btn-outline-secondary"
-                                    onclick="window.open('{{ url('/proveedores') }}','_blank')">
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </div>
-                    </div>
+        .tabla-detalle th, .tabla-detalle td {
+            border: 1px solid black;
+            padding: 5px;
+            font-size: 12px;
+            text-align: center;
+        }
 
-                    <div class="col-md-3">
-                        <label class="form-label"><strong>Lugar:</strong></label>
-                        <input type="text" name="lugar" id="lugar" class="form-control"
-                               value="{{ old('lugar') }}">
-                    </div>
+        .firma {
+            margin-top: 40px;
+            width: 100%;
+            text-align: center;
+        }
 
-                    <div class="col-md-2">
-                        <label class="form-label"><strong>N°</strong></label>
-                        <input type="text" name="numero" class="form-control"
-                               value="{{ old('numero', $numero ?? '') }}" readonly>
-                    </div>
-                </div>
+        .firmas td {
+            padding-top: 50px;
+        }
 
-                {{-- TABLA --}}
-                <div class="table-responsive">
-                    <table class="table table-bordered align-middle" id="itemsTable">
-                        <thead class="table-light text-center">
-                            <tr>
-                                <th style="width:6%;">Cant.</th>
-                                <th>Descripción</th>
-                                <th style="width:10%;">Unidad</th>
-                                <th style="width:12%;">Precio Unitario</th>
-                                <th style="width:12%;">Descuento</th>
-                                <th style="width:12%;">Valor L.</th>
-                                <th style="width:6%;">Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><input type="number" min="0" step="0.01" class="form-control qty"
-                                           name="items[0][cantidad]" value="1"></td>
-                                <td><input type="text" class="form-control desc"
-                                           name="items[0][descripcion]" placeholder="Descripción del artículo"></td>
-                                <td><input type="text" class="form-control unidad"
-                                           name="items[0][unidad]"></td>
-                                <td><input type="number" min="0" step="0.01" class="form-control price"
-                                           name="items[0][precio_unitario]" value="0.00"></td>
-                                <td><input type="number" min="
+        .subtotales {
+            width: 40%;
+            float: right;
+            margin-top: 10px;
+            border: 1px solid black;
+            padding: 10px;
+        }
+
+        .subtotales td {
+            padding: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="titulo-centro">
+        MUNICIPALIDAD DE DANLÍ, EL PARAÍSO<br>
+        Departamento de El Paraíso, Honduras, C.A.<br>
+        Teléfonos: 2763-2080 / 2763-2405 &nbsp;&nbsp;&nbsp; Fax: 2763-2638<br>
+        <h3>ORDEN DE COMPRA No. ___________</h3>
+    </div>
+
+    <table class="tabla-header">
+        <tr>
+            <td><strong>LUGAR:</strong> _____________________________</td>
+            <td><strong>FECHA:</strong> _____________________________</td>
+        </tr>
+        <tr>
+            <td colspan="2"><strong>A:</strong> ____________________________________________________</td>
+        </tr>
+    </table>
+
+    <p>
+        Estimados señores:<br>
+        Agradecemos entregar los materiales o prestar los servicios indicados en el siguiente cuadro:
+    </p>
+
+    <table class="tabla-detalle">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>DESCRIPCIÓN</th>
+                <th>UNIDAD</th>
+                <th>CANTIDAD</th>
+                <th>PRECIO U.</th>
+                <th>VALOR L.</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for ($i = 1; $i <= 10; $i++)
+                <tr>
+                    <td>{{ $i }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            @endfor
+        </tbody>
+    </table>
+
+    <table class="subtotales">
+        <tr>
+            <td><strong>Sub - Total L.</strong></td>
+            <td>_________</td>
+        </tr>
+        <tr>
+            <td><strong>Descuento.</strong></td>
+            <td>_________</td>
+        </tr>
+        <tr>
+            <td><strong>Impuesto.</strong></td>
+            <td>_________</td>
+        </tr>
+        <tr>
+            <td><strong>Total Pago:</strong></td>
+            <td>_________</td>
+        </tr>
+    </table>
+
+    <div style="clear: both;"></div>
+
+    <p style="margin-top: 40px;">
+        UTILIZADOS POR: ______________________________________________________________
+    </p>
+
+    <p>
+        SOLICITADO POR: ______________________________________________________________
+    </p>
+
+    <br><br>
+
+    <table class="firmas" width="100%">
+        <tr>
+            <td>_____________________________<br>Jefe de Compras</td>
+            <td>_____________________________<br>Gerente Administrativo</td>
+            <td>_____________________________<br>Alcalde Municipal</td>
+        </tr>
+    </table>
+
+    <p style="margin-top: 40px;">
+        <strong>Copia</strong> &nbsp;&nbsp;&nbsp;&nbsp; Hecho por: ______________________
+    </p>
+
+</body>
+</html>
+
