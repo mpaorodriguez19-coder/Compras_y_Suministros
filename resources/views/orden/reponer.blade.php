@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Orden de Compra</title>
+    <title>Orden de Compra MELBA</title>
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
