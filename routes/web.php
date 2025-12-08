@@ -21,7 +21,10 @@ Route::get('/', [OrdenCompraController::class, 'index']);
 
 // Rutas del panel
 Route::get('/orden/espera', [OrdenController::class, 'enEspera'])->name('orden.espera');
+
+Route::post('/orden/reponer', [OrdenController::class, 'reponer'])->name('orden.reponer');
 Route::get('/orden/reponer', [OrdenController::class, 'reponer'])->name('orden.reponer');
+
 Route::get('/informe-detallado', [PanelController::class, 'informeDetallado'])->name('informe.detallado');
 Route::get('/compras-proveedor', [PanelController::class, 'comprasProveedor'])->name('compras.proveedor');
 Route::get('/resumen-proveedor', [PanelController::class, 'resumenProveedor'])->name('resumen.proveedor');
