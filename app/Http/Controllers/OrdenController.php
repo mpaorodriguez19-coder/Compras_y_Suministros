@@ -37,11 +37,83 @@ class OrdenController extends Controller
         return view('orden.reponer', compact('proveedores', 'numero'));
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    |   NUEVO — MÉTODOS PARA GUARDAR LA ORDEN, LISTAR Y GENERAR NÚMERO
-    |--------------------------------------------------------------------------
-    */
+public function guardarReponer(Request $request)
+{
+    $request->validate([
+        'fecha' => 'required',
+        'proveedor' => 'required',
+        'cantidad' => 'required|array',
+        'descripcion' => 'required|array',
+    ]);
+
+    DB::transaction(function () use ($request) {
+
+        // Generar número
+        $ultimo = Orden::latest('id')->first();
+        $numero = $ultimo ? $ultimo->id + 1 : 1;
+        $numero = str_pad($numero, 6, '0', STR_PAD_LEFT);
+
+        //  Crear orden
+        $orden = Orden::create([
+            'numero' => $numero,
+            'fecha' => $request->fecha,
+            'proveedor' => $request->proveedor,
+            'lugar' => $request->lugar,
+            'solicitado' => $request->solicitado,
+            'concepto' => $request->concepto,
+            'subtotal' => 0,
+            'descuento' => 0,
+            'impuesto' => 0,
+            'total' => 0,
+        ]);
+
+        $subtotal = 0;
+        $descuentoTotal = 0;
+
+        // Guardar detalles
+        foreach ($request->cantidad as $i => $cant) {
+
+            // ⛔ Saltar filas vacías
+            if (empty($cant) || empty($request->descripcion[$i])) {
+                continue;
+            }
+
+            $precio = $request->precio[$i] ?? 0;
+            $desc = $request->descuento[$i] ?? 0;
+
+            $valor = ($cant * $precio) - $desc;
+
+            OrdenDetalle::create([
+                'orden_id' => $orden->id,
+                'cantidad' => $cant,
+                'descripcion' => $request->descripcion[$i],
+                'unidad' => $request->unidad[$i] ?? '',
+                'precio' => $precio,
+                'descuento' => $desc,
+                'valor' => $valor,
+            ]);
+
+            $subtotal += ($cant * $precio);
+            $descuentoTotal += $desc;
+        }
+
+        //  Totales
+        $impuesto = $subtotal * 0.15;
+        $total = $subtotal - $descuentoTotal + $impuesto;
+
+        //  Actualizar orden
+        $orden->update([
+            'subtotal' => $subtotal,
+            'descuento' => $descuentoTotal,
+            'impuesto' => $impuesto,
+            'total' => $total,
+        ]);
+    });
+
+    return redirect()
+        ->route('orden.reponer')
+        ->with('success', '✅ Orden guardada correctamente');
+}
 
     // Mostrar el formulario de crear orden
     public function create()
