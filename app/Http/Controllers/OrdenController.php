@@ -39,80 +39,26 @@ class OrdenController extends Controller
 
 public function guardarReponer(Request $request)
 {
-    $request->validate([
-        'fecha' => 'required',
-        'proveedor' => 'required',
-        'cantidad' => 'required|array',
-        'descripcion' => 'required|array',
+    // Guardar los datos en la base de datos...
+    // Por ejemplo:
+    $orden = Orden::create([
+        'fecha' => $request->fecha,
+        'proveedor' => $request->proveedor,
+        'lugar' => $request->lugar,
+        'solicitado_por' => $request->solicitado,
+        'concepto' => $request->concepto,
+        'items' => json_encode($request->descripcion), // o como manejes items
     ]);
 
-    DB::transaction(function () use ($request) {
+    // Devolver la vista con los datos ingresados para que no se muevan
+    $proveedores = Proveedor::orderBy('nombre')->get();
+    $numero = str_pad($orden->id, 6, '0', STR_PAD_LEFT);
 
-        // Generar número
-        $ultimo = Orden::latest('id')->first();
-        $numero = $ultimo ? $ultimo->id + 1 : 1;
-        $numero = str_pad($numero, 6, '0', STR_PAD_LEFT);
-
-        //  Crear orden
-        $orden = Orden::create([
-            'numero' => $numero,
-            'fecha' => $request->fecha,
-            'proveedor' => $request->proveedor,
-            'lugar' => $request->lugar,
-            'solicitado' => $request->solicitado,
-            'concepto' => $request->concepto,
-            'subtotal' => 0,
-            'descuento' => 0,
-            'impuesto' => 0,
-            'total' => 0,
-        ]);
-
-        $subtotal = 0;
-        $descuentoTotal = 0;
-
-        // Guardar detalles
-        foreach ($request->cantidad as $i => $cant) {
-
-            // ⛔ Saltar filas vacías
-            if (empty($cant) || empty($request->descripcion[$i])) {
-                continue;
-            }
-
-            $precio = $request->precio[$i] ?? 0;
-            $desc = $request->descuento[$i] ?? 0;
-
-            $valor = ($cant * $precio) - $desc;
-
-            OrdenDetalle::create([
-                'orden_id' => $orden->id,
-                'cantidad' => $cant,
-                'descripcion' => $request->descripcion[$i],
-                'unidad' => $request->unidad[$i] ?? '',
-                'precio' => $precio,
-                'descuento' => $desc,
-                'valor' => $valor,
-            ]);
-
-            $subtotal += ($cant * $precio);
-            $descuentoTotal += $desc;
-        }
-
-        //  Totales
-        $impuesto = $subtotal * 0.15;
-        $total = $subtotal - $descuentoTotal + $impuesto;
-
-        //  Actualizar orden
-        $orden->update([
-            'subtotal' => $subtotal,
-            'descuento' => $descuentoTotal,
-            'impuesto' => $impuesto,
-            'total' => $total,
-        ]);
-    });
-
-    return redirect()
-        ->route('orden.reponer')
-        ->with('success', '✅ Orden guardada correctamente');
+    return view('orden.reponer', [
+        'proveedores' => $proveedores,
+        'numero' => $numero,
+        'oldInput' => $request->all()  // <--- importante
+    ])->with('success', 'Orden guardada correctamente');
 }
 
     // Mostrar el formulario de crear orden

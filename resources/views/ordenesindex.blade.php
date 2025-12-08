@@ -140,32 +140,31 @@ input, select, textarea {
   <div class="row g-2 mb-0">
       <!-- Formulario -->
       <div class="col-lg-10 pe-0">
-        <form action="{{ route('orden.reponer') }}" method="POST" id="ordenForm" class="mb-0">
+          <form action="{{ route('orden.reponer.guardar') }}" method="POST">
     @csrf
-
               <div class="p-2 rounded shadow-sm bg-light mb-0">
                   <div class="d-flex flex-wrap align-items-center mb-1">
                       <label for="fecha" class="form-label fw-bold me-2 mb-0" style="width: 120px;">Fecha:</label>
-                      <input id="fecha" name="fecha" type="date" class="form-control form-control-sm shadow-sm" style="max-width: 200px;">
+                      <input id="fecha" type="date" class="form-control form-control-sm shadow-sm" style="max-width: 200px;">
                   </div>
 
                   <div class="d-flex flex-wrap align-items-center mb-1">
                       <label for="proveedor" class="form-label fw-bold me-2 mb-0" style="width: 120px;">Proveedor:</label>
                       <div class="input-group input-group-sm" style="max-width: 400px;">
-                          <input id="proveedor" name="proveedor" type="text" class="form-control shadow-sm" placeholder="Proveedor...">
+                          <input id="proveedor" type="text" class="form-control shadow-sm" placeholder="Proveedor...">
                           <button type="button" class="btn btn-outline-primary btn-sm" title="Buscar proveedor">🔍</button>
                       </div>
                   </div>
 
                   <div class="d-flex flex-wrap align-items-center mb-1">
                       <label for="lugar" class="form-label fw-bold me-2 mb-0" style="width: 120px;">Lugar:</label>
-                      <input id="lugar" name="lugar" type="text" class="form-control form-control-sm shadow-sm" placeholder="Sede / ubicación" style="max-width: 400px;">
+                      <input id="lugar" type="text" class="form-control form-control-sm shadow-sm" placeholder="Sede / ubicación" style="max-width: 400px;">
                   </div>
 
                   <div class="d-flex flex-wrap align-items-center mb-1">
                       <label for="solicitado" class="form-label fw-bold me-2 mb-0" style="width: 120px;">Solicitado por:</label>
                       <div class="input-group input-group-sm" style="max-width: 400px;">
-                          <input id="solicitado" name="solicitado" type="text" class="form-control shadow-sm" placeholder="Usuario solicitante...">
+                          <input id="solicitado" type="text" class="form-control shadow-sm" placeholder="Usuario solicitante...">
                           <button type="button" class="btn btn-outline-primary btn-sm" title="Buscar usuario">🔍</button>
                       </div>
                   </div>
@@ -187,435 +186,110 @@ input, select, textarea {
                         <tbody>
 
                            <!-- Columna de descripción y checkbox -->
-        <tr style="height:26px;">
-    <td>
-        <input name="cantidad[]" type="number" min="0" step="1"
-               class="form-control form-control-sm no-arrows qty"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
+                       <tr style="height:26px;">
+    <td><input type="number" min="0" step="1" class="form-control form-control-sm no-arrows qty" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
     <td class="d-flex align-items-center">
-        <input name="descripcion[]" type="text"
-               class="form-control form-control-sm desc me-1"
-               placeholder="Descripción del artículo"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-        <input name="aplica_descuento[]" type="checkbox"
-               class="form-check-input small-checkbox"
-               value="1"
-               style="width:14px; height:14px; margin:0;" />
+        <input type="text" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" style="height:22px; padding:1px 4px; font-size:12px;" />
+        <input type="checkbox" class="form-check-input small-checkbox" title="Aplica descuento?" style="width:14px; height:14px; margin:0;" />
     </td>
-
-    <td>
-        <input name="unidad[]" type="text"
-               class="form-control form-control-sm unidad"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input name="precio[]" type="number" step="0.01"
-               class="form-control form-control-sm no-arrows price"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input name="descuento[]" type="number" step="0.01"
-               class="form-control form-control-sm no-arrows discount"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input type="text" class="valor-read"
-               name="valor[]"
-               readonly value="0.00"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td class="text-center">
-        <button type="button"
-                class="btn btn-sm btn-danger py-0 px-2"
-                style="font-size:12px;"
-                onclick="eliminarFila(this)">
-            X
-        </button>
-    </td>
+    <td><input type="text" class="form-control form-control-sm unidad" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="text" class="valor-read" readonly value="0.00" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td class="text-center"><button class="btn btn-sm btn-danger py-0 px-2" style="font-size:12px;" onclick="eliminarFila(this)">X</button></td>
 </tr>
 
 
 <tr style="height:26px;">
-    <td>
-        <input name="cantidad[]" type="number" min="0" step="1"
-               class="form-control form-control-sm no-arrows qty"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
+    <td><input type="number" min="0" step="1" class="form-control form-control-sm no-arrows qty" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
     <td class="d-flex align-items-center">
-        <input name="descripcion[]" type="text"
-               class="form-control form-control-sm desc me-1"
-               placeholder="Descripción del artículo"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-        <input name="aplica_descuento[]" type="checkbox"
-               class="form-check-input small-checkbox"
-               value="1"
-               style="width:14px; height:14px; margin:0;" />
+        <input type="text" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" style="height:22px; padding:1px 4px; font-size:12px;" />
+        <input type="checkbox" class="form-check-input small-checkbox" title="Aplica descuento?" style="width:14px; height:14px; margin:0;" />
     </td>
-
-    <td>
-        <input name="unidad[]" type="text"
-               class="form-control form-control-sm unidad"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input name="precio[]" type="number" step="0.01"
-               class="form-control form-control-sm no-arrows price"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input name="descuento[]" type="number" step="0.01"
-               class="form-control form-control-sm no-arrows discount"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input type="text" class="valor-read"
-               name="valor[]"
-               readonly value="0.00"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td class="text-center">
-        <button type="button"
-                class="btn btn-sm btn-danger py-0 px-2"
-                style="font-size:12px;"
-                onclick="eliminarFila(this)">
-            X
-        </button>
-    </td>
+    <td><input type="text" class="form-control form-control-sm unidad" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="text" class="valor-read" readonly value="0.00" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td class="text-center"><button class="btn btn-sm btn-danger py-0 px-2" style="font-size:12px;" onclick="eliminarFila(this)">X</button></td>
 </tr>
 
 
-       <tr style="height:26px;">
-    <td>
-        <input name="cantidad[]" type="number" min="0" step="1"
-               class="form-control form-control-sm no-arrows qty"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
+                 <tr style="height:26px;">
+    <td><input type="number" min="0" step="1" class="form-control form-control-sm no-arrows qty" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
     <td class="d-flex align-items-center">
-        <input name="descripcion[]" type="text"
-               class="form-control form-control-sm desc me-1"
-               placeholder="Descripción del artículo"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-        <input name="aplica_descuento[]" type="checkbox"
-               class="form-check-input small-checkbox"
-               value="1"
-               style="width:14px; height:14px; margin:0;" />
+        <input type="text" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" style="height:22px; padding:1px 4px; font-size:12px;" />
+        <input type="checkbox" class="form-check-input small-checkbox" title="Aplica descuento?" style="width:14px; height:14px; margin:0;" />
     </td>
-
-    <td>
-        <input name="unidad[]" type="text"
-               class="form-control form-control-sm unidad"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input name="precio[]" type="number" step="0.01"
-               class="form-control form-control-sm no-arrows price"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input name="descuento[]" type="number" step="0.01"
-               class="form-control form-control-sm no-arrows discount"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input type="text" class="valor-read"
-               name="valor[]"
-               readonly value="0.00"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td class="text-center">
-        <button type="button"
-                class="btn btn-sm btn-danger py-0 px-2"
-                style="font-size:12px;"
-                onclick="eliminarFila(this)">
-            X
-        </button>
-    </td>
+    <td><input type="text" class="form-control form-control-sm unidad" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="text" class="valor-read" readonly value="0.00" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td class="text-center"><button class="btn btn-sm btn-danger py-0 px-2" style="font-size:12px;" onclick="eliminarFila(this)">X</button></td>
 </tr>
 
 
-
-             <tr style="height:26px;">
-    <td>
-        <input name="cantidad[]" type="number" min="0" step="1"
-               class="form-control form-control-sm no-arrows qty"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
+                          <tr style="height:26px;">
+    <td><input type="number" min="0" step="1" class="form-control form-control-sm no-arrows qty" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
     <td class="d-flex align-items-center">
-        <input name="descripcion[]" type="text"
-               class="form-control form-control-sm desc me-1"
-               placeholder="Descripción del artículo"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-        <input name="aplica_descuento[]" type="checkbox"
-               class="form-check-input small-checkbox"
-               value="1"
-               style="width:14px; height:14px; margin:0;" />
+        <input type="text" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" style="height:22px; padding:1px 4px; font-size:12px;" />
+        <input type="checkbox" class="form-check-input small-checkbox" title="Aplica descuento?" style="width:14px; height:14px; margin:0;" />
     </td>
-
-    <td>
-        <input name="unidad[]" type="text"
-               class="form-control form-control-sm unidad"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
+    <td><input type="text" class="form-control form-control-sm unidad" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="text" class="valor-read" readonly value="0.00" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td class="text-center"><button class="btn btn-sm btn-danger py-0 px-2" style="font-size:12px;" onclick="eliminarFila(this)">X</button></td>
+</tr>
+<tr style="height:26px;">
+    <td><input type="number" min="0" step="1" class="form-control form-control-sm no-arrows qty" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td class="d-flex align-items-center">
+        <input type="text" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" style="height:22px; padding:1px 4px; font-size:12px;" />
+        <input type="checkbox" class="form-check-input small-checkbox" title="Aplica descuento?" style="width:14px; height:14px; margin:0;" />
     </td>
-
-    <td>
-        <input name="precio[]" type="number" step="0.01"
-               class="form-control form-control-sm no-arrows price"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input name="descuento[]" type="number" step="0.01"
-               class="form-control form-control-sm no-arrows discount"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input type="text" class="valor-read"
-               name="valor[]"
-               readonly value="0.00"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td class="text-center">
-        <button type="button"
-                class="btn btn-sm btn-danger py-0 px-2"
-                style="font-size:12px;"
-                onclick="eliminarFila(this)">
-            X
-        </button>
-    </td>
+    <td><input type="text" class="form-control form-control-sm unidad" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="text" class="valor-read" readonly value="0.00" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td class="text-center"><button class="btn btn-sm btn-danger py-0 px-2" style="font-size:12px;" onclick="eliminarFila(this)">X</button></td>
 </tr>
 
 <tr style="height:26px;">
-    <td>
-        <input name="cantidad[]" type="number" min="0" step="1"
-               class="form-control form-control-sm no-arrows qty"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
+    <td><input type="number" min="0" step="1" class="form-control form-control-sm no-arrows qty" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
     <td class="d-flex align-items-center">
-        <input name="descripcion[]" type="text"
-               class="form-control form-control-sm desc me-1"
-               placeholder="Descripción del artículo"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-        <input name="aplica_descuento[]" type="checkbox"
-               class="form-check-input small-checkbox"
-               value="1"
-               style="width:14px; height:14px; margin:0;" />
+        <input type="text" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" style="height:22px; padding:1px 4px; font-size:12px;" />
+        <input type="checkbox" class="form-check-input small-checkbox" title="Aplica descuento?" style="width:14px; height:14px; margin:0;" />
     </td>
-
-    <td>
-        <input name="unidad[]" type="text"
-               class="form-control form-control-sm unidad"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input name="precio[]" type="number" step="0.01"
-               class="form-control form-control-sm no-arrows price"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input name="descuento[]" type="number" step="0.01"
-               class="form-control form-control-sm no-arrows discount"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input type="text" class="valor-read"
-               name="valor[]"
-               readonly value="0.00"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td class="text-center">
-        <button type="button"
-                class="btn btn-sm btn-danger py-0 px-2"
-                style="font-size:12px;"
-                onclick="eliminarFila(this)">
-            X
-        </button>
-    </td>
+    <td><input type="text" class="form-control form-control-sm unidad" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="text" class="valor-read" readonly value="0.00" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td class="text-center"><button class="btn btn-sm btn-danger py-0 px-2" style="font-size:12px;" onclick="eliminarFila(this)">X</button></td>
 </tr>
 
-
 <tr style="height:26px;">
-    <td>
-        <input name="cantidad[]" type="number" min="0" step="1"
-               class="form-control form-control-sm no-arrows qty"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
+    <td><input type="number" min="0" step="1" class="form-control form-control-sm no-arrows qty" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
     <td class="d-flex align-items-center">
-        <input name="descripcion[]" type="text"
-               class="form-control form-control-sm desc me-1"
-               placeholder="Descripción del artículo"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-        <input name="aplica_descuento[]" type="checkbox"
-               class="form-check-input small-checkbox"
-               value="1"
-               style="width:14px; height:14px; margin:0;" />
+        <input type="text" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" style="height:22px; padding:1px 4px; font-size:12px;" />
+        <input type="checkbox" class="form-check-input small-checkbox" title="Aplica descuento?" style="width:14px; height:14px; margin:0;" />
     </td>
-
-    <td>
-        <input name="unidad[]" type="text"
-               class="form-control form-control-sm unidad"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input name="precio[]" type="number" step="0.01"
-               class="form-control form-control-sm no-arrows price"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input name="descuento[]" type="number" step="0.01"
-               class="form-control form-control-sm no-arrows discount"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input type="text" class="valor-read"
-               name="valor[]"
-               readonly value="0.00"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td class="text-center">
-        <button type="button"
-                class="btn btn-sm btn-danger py-0 px-2"
-                style="font-size:12px;"
-                onclick="eliminarFila(this)">
-            X
-        </button>
-    </td>
+    <td><input type="text" class="form-control form-control-sm unidad" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="text" class="valor-read" readonly value="0.00" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td class="text-center"><button class="btn btn-sm btn-danger py-0 px-2" style="font-size:12px;" onclick="eliminarFila(this)">X</button></td>
 </tr>
 
-
 <tr style="height:26px;">
-    <td>
-        <input name="cantidad[]" type="number" min="0" step="1"
-               class="form-control form-control-sm no-arrows qty"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
+    <td><input type="number" min="0" step="1" class="form-control form-control-sm no-arrows qty" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
     <td class="d-flex align-items-center">
-        <input name="descripcion[]" type="text"
-               class="form-control form-control-sm desc me-1"
-               placeholder="Descripción del artículo"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-        <input name="aplica_descuento[]" type="checkbox"
-               class="form-check-input small-checkbox"
-               value="1"
-               style="width:14px; height:14px; margin:0;" />
+        <input type="text" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" style="height:22px; padding:1px 4px; font-size:12px;" />
+        <input type="checkbox" class="form-check-input small-checkbox" title="Aplica descuento?" style="width:14px; height:14px; margin:0;" />
     </td>
-
-    <td>
-        <input name="unidad[]" type="text"
-               class="form-control form-control-sm unidad"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input name="precio[]" type="number" step="0.01"
-               class="form-control form-control-sm no-arrows price"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input name="descuento[]" type="number" step="0.01"
-               class="form-control form-control-sm no-arrows discount"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input type="text" class="valor-read"
-               name="valor[]"
-               readonly value="0.00"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td class="text-center">
-        <button type="button"
-                class="btn btn-sm btn-danger py-0 px-2"
-                style="font-size:12px;"
-                onclick="eliminarFila(this)">
-            X
-        </button>
-    </td>
-</tr>
-
-
-<tr style="height:26px;">
-    <td>
-        <input name="cantidad[]" type="number" min="0" step="1"
-               class="form-control form-control-sm no-arrows qty"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td class="d-flex align-items-center">
-        <input name="descripcion[]" type="text"
-               class="form-control form-control-sm desc me-1"
-               placeholder="Descripción del artículo"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-        <input name="aplica_descuento[]" type="checkbox"
-               class="form-check-input small-checkbox"
-               value="1"
-               style="width:14px; height:14px; margin:0;" />
-    </td>
-
-    <td>
-        <input name="unidad[]" type="text"
-               class="form-control form-control-sm unidad"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input name="precio[]" type="number" step="0.01"
-               class="form-control form-control-sm no-arrows price"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input name="descuento[]" type="number" step="0.01"
-               class="form-control form-control-sm no-arrows discount"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td>
-        <input type="text" class="valor-read"
-               name="valor[]"
-               readonly value="0.00"
-               style="height:22px; padding:1px 4px; font-size:12px;" />
-    </td>
-
-    <td class="text-center">
-        <button type="button"
-                class="btn btn-sm btn-danger py-0 px-2"
-                style="font-size:12px;"
-                onclick="eliminarFila(this)">
-            X
-        </button>
-    </td>
+    <td><input type="text" class="form-control form-control-sm unidad" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td><input type="text" class="valor-read" readonly value="0.00" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
+    <td class="text-center"><button class="btn btn-sm btn-danger py-0 px-2" style="font-size:12px;" onclick="eliminarFila(this)">X</button></td>
 </tr>
 
 
@@ -628,7 +302,7 @@ input, select, textarea {
                       <!-- Concepto -->
                       <div class="flex-grow-1">
                           <label class="form-label">Concepto</label>
-                          <textarea id="concepto" name="concepto" rows="3" class="form-control"></textarea>
+                          <textarea id="concepto" rows="3" class="form-control"></textarea>
                           <div class="mt-1">
                               <button type="button" class="btn btn-outline-primary btn-sm" onclick="agregarFila()">+ Agregar fila</button>
                           </div>
@@ -643,10 +317,9 @@ input, select, textarea {
                               <hr/>
                               <div class="d-flex justify-content-between"><div class="fw-bold">Total</div><div class="fw-bold" id="total">0.00</div></div>
                               <div class="mt-2 text-center">
-                              <button type="submit" class="btn btn-sm btn-outline-success">
-    💾 Guardar
-</button>
-
+                                <button type="submit" class="btn btn-sm btn-outline-success">
+        💾 Guardar
+    </button>
                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="salir()">Salir</button>
                               </div>
                           </div>

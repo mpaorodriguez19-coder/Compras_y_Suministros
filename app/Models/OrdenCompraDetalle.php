@@ -16,8 +16,6 @@ class OrdenCompraDetalle extends Model
         'precio_unitario',
         'descuento',
         'valor',
-        'cupon',
-         'prueba'
     ];
 
     /* Los detalles de la compra pertenecen a una orden */
