@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Orden de Compra MELBAAA</title>
+<title>Orden de Compra</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
 <style>
 :root{
@@ -133,7 +133,7 @@ input, select, textarea {
 
   <!-- Barra superior -->
   <div class="header-bar">
-      <h4 class="m-0">Orden de Compra</h4>
+      <h4 class="m-0">Orden de Compra MELBA</h4>
   </div>
 
   <!-- Formulario + Panel derecho -->
