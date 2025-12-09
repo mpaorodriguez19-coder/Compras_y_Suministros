@@ -226,152 +226,134 @@ function handleInput() {
 
 
                   <!-- ---------------- SECCION TABLA Y PANEL DERECHO ---------------- -->
-                  <div class="table-responsive mt-2">
-                    <table id="itemsTable" class="table table-bordered align-middle mb-0">
-                        <thead>
-                            <tr class="text-center">
-                                <th style="width:50px">Cant.</th>
-                                <th>Descripción</th>
-                                <th style="width:50px">Unidad</th>
-                                <th style="width:50px">Precio Unitario</th>
-                                <th style="width:50px">Descuento</th>
-                                <th style="width:50px">Valor L.</th>
-                                <th style="width:50px">Acción</th>
-                            </tr>
-                        </thead>
+                <table id="itemsTable" class="table table-bordered align-middle mb-0">
+    <thead>
+        <tr class="text-center">
+            <th>Cant.</th>
+            <th>Descripción</th>
+            <th>Unidad</th>
+            <th>Precio Unit.</th>
+            <th>Descuento</th>
+            <th>Valor L.</th>
+            <th>Acción</th>
+        </tr>
+    </thead>
                         <tbody>
 
                            <!-- Columna de descripción y checkbox -->
-                       <tr style="height:26px;">
-    <td><input type="number" min="0" step="1" class="form-control form-control-sm no-arrows qty" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td class="d-flex align-items-center">
-        <input type="text" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" style="height:22px; padding:1px 4px; font-size:12px;" />
-        <input type="checkbox" class="form-check-input small-checkbox" title="Aplica descuento?" style="width:14px; height:14px; margin:0;" />
-    </td>
-    <td><input type="text" class="form-control form-control-sm unidad" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="text" class="valor-read" readonly value="0.00" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td class="text-center"><button class="btn btn-sm btn-danger py-0 px-2" style="font-size:12px;" onclick="eliminarFila(this)">X</button></td>
-</tr>
+      <script>
+let index = 0;
 
+/* AGREGAR FILA (ILIMITADAS) */
+function agregarFila() {
+    const tbody = document.getElementById('itemsBody');
 
-<tr style="height:26px;">
-    <td><input type="number" min="0" step="1" class="form-control form-control-sm no-arrows qty" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td class="d-flex align-items-center">
-        <input type="text" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" style="height:22px; padding:1px 4px; font-size:12px;" />
-        <input type="checkbox" class="form-check-input small-checkbox" title="Aplica descuento?" style="width:14px; height:14px; margin:0;" />
-    </td>
-    <td><input type="text" class="form-control form-control-sm unidad" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="text" class="valor-read" readonly value="0.00" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td class="text-center"><button class="btn btn-sm btn-danger py-0 px-2" style="font-size:12px;" onclick="eliminarFila(this)">X</button></td>
-</tr>
+    const tr = document.createElement('tr');
+    tr.style.height = '26px';
 
+    tr.innerHTML = `
+        <td>
+            <input type="number" min="0" step="1"
+                   name="items[${index}][cantidad]"
+                   class="form-control form-control-sm no-arrows qty"
+                   style="height:22px;padding:1px 4px;font-size:12px;">
+        </td>
 
-                 <tr style="height:26px;">
-    <td><input type="number" min="0" step="1" class="form-control form-control-sm no-arrows qty" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td class="d-flex align-items-center">
-        <input type="text" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" style="height:22px; padding:1px 4px; font-size:12px;" />
-        <input type="checkbox" class="form-check-input small-checkbox" title="Aplica descuento?" style="width:14px; height:14px; margin:0;" />
-    </td>
-    <td><input type="text" class="form-control form-control-sm unidad" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="text" class="valor-read" readonly value="0.00" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td class="text-center"><button class="btn btn-sm btn-danger py-0 px-2" style="font-size:12px;" onclick="eliminarFila(this)">X</button></td>
-</tr>
+        <td class="d-flex align-items-center">
+            <input type="text"
+                   name="items[${index}][descripcion]"
+                   class="form-control form-control-sm desc me-1"
+                   placeholder="Descripción del artículo"
+                   style="height:22px;padding:1px 4px;font-size:12px;">
+            <input type="checkbox"
+                   class="form-check-input small-checkbox"
+                   style="width:14px;height:14px;margin:0;">
+        </td>
 
+        <td>
+            <input type="text"
+                   name="items[${index}][unidad]"
+                   class="form-control form-control-sm unidad"
+                   style="height:22px;padding:1px 4px;font-size:12px;">
+        </td>
 
-                          <tr style="height:26px;">
-    <td><input type="number" min="0" step="1" class="form-control form-control-sm no-arrows qty" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td class="d-flex align-items-center">
-        <input type="text" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" style="height:22px; padding:1px 4px; font-size:12px;" />
-        <input type="checkbox" class="form-check-input small-checkbox" title="Aplica descuento?" style="width:14px; height:14px; margin:0;" />
-    </td>
-    <td><input type="text" class="form-control form-control-sm unidad" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="text" class="valor-read" readonly value="0.00" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td class="text-center"><button class="btn btn-sm btn-danger py-0 px-2" style="font-size:12px;" onclick="eliminarFila(this)">X</button></td>
-</tr>
-<tr style="height:26px;">
-    <td><input type="number" min="0" step="1" class="form-control form-control-sm no-arrows qty" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td class="d-flex align-items-center">
-        <input type="text" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" style="height:22px; padding:1px 4px; font-size:12px;" />
-        <input type="checkbox" class="form-check-input small-checkbox" title="Aplica descuento?" style="width:14px; height:14px; margin:0;" />
-    </td>
-    <td><input type="text" class="form-control form-control-sm unidad" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="text" class="valor-read" readonly value="0.00" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td class="text-center"><button class="btn btn-sm btn-danger py-0 px-2" style="font-size:12px;" onclick="eliminarFila(this)">X</button></td>
-</tr>
+        <td>
+            <input type="number" step="0.01"
+                   name="items[${index}][precio]"
+                   class="form-control form-control-sm no-arrows price"
+                   style="height:22px;padding:1px 4px;font-size:12px;">
+        </td>
 
-<tr style="height:26px;">
-    <td><input type="number" min="0" step="1" class="form-control form-control-sm no-arrows qty" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td class="d-flex align-items-center">
-        <input type="text" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" style="height:22px; padding:1px 4px; font-size:12px;" />
-        <input type="checkbox" class="form-check-input small-checkbox" title="Aplica descuento?" style="width:14px; height:14px; margin:0;" />
-    </td>
-    <td><input type="text" class="form-control form-control-sm unidad" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="text" class="valor-read" readonly value="0.00" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td class="text-center"><button class="btn btn-sm btn-danger py-0 px-2" style="font-size:12px;" onclick="eliminarFila(this)">X</button></td>
-</tr>
+        <td>
+            <input type="number" step="0.01"
+                   name="items[${index}][descuento]"
+                   class="form-control form-control-sm no-arrows discount"
+                   value="0"
+                   style="height:22px;padding:1px 4px;font-size:12px;">
+        </td>
 
-<tr style="height:26px;">
-    <td><input type="number" min="0" step="1" class="form-control form-control-sm no-arrows qty" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td class="d-flex align-items-center">
-        <input type="text" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" style="height:22px; padding:1px 4px; font-size:12px;" />
-        <input type="checkbox" class="form-check-input small-checkbox" title="Aplica descuento?" style="width:14px; height:14px; margin:0;" />
-    </td>
-    <td><input type="text" class="form-control form-control-sm unidad" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="text" class="valor-read" readonly value="0.00" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td class="text-center"><button class="btn btn-sm btn-danger py-0 px-2" style="font-size:12px;" onclick="eliminarFila(this)">X</button></td>
-</tr>
+        <td>
+            <input type="text"
+                   class="valor-read"
+                   readonly value="0.00"
+                   style="height:22px;padding:1px 4px;font-size:12px;">
+        </td>
 
-<tr style="height:26px;">
-    <td><input type="number" min="0" step="1" class="form-control form-control-sm no-arrows qty" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td class="d-flex align-items-center">
-        <input type="text" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" style="height:22px; padding:1px 4px; font-size:12px;" />
-        <input type="checkbox" class="form-check-input small-checkbox" title="Aplica descuento?" style="width:14px; height:14px; margin:0;" />
-    </td>
-    <td><input type="text" class="form-control form-control-sm unidad" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="number" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td><input type="text" class="valor-read" readonly value="0.00" style="height:22px; padding:1px 4px; font-size:12px;" /></td>
-    <td class="text-center"><button class="btn btn-sm btn-danger py-0 px-2" style="font-size:12px;" onclick="eliminarFila(this)">X</button></td>
-</tr>
+        <td class="text-center">
+            <button type="button"
+                    class="btn btn-sm btn-danger py-0 px-2"
+                    style="font-size:12px;"
+                    onclick="eliminarFila(this)">X</button>
+        </td>
+    `;
 
+    tbody.appendChild(tr);
+    index++;
+}
 
-                        </tbody>
-                    </table>
-                  </div>
+/* ELIMINAR FILA */
+function eliminarFila(btn) {
+    btn.closest('tr').remove();
+    calcularTotales();
+}
 
-                  <!-- Concepto + Totales -->
-                  <div class="d-flex justify-content-between align-items-start gap-2 mt-2">
-                      <!-- Concepto -->
-                      <div class="flex-grow-1">
-                          <label class="form-label">Concepto</label>
-                          <textarea id="concepto" name="concepto" rows="3" class="form-control"></textarea>
-                          <div class="mt-1">
-                              <button type="button" class="btn btn-outline-primary btn-sm" onclick="agregarFila()">+ Agregar fila</button>
-                          </div>
-                      </div>
+/* CALCULO AUTOMATICO*/
+document.addEventListener('input', function () {
+    calcularTotales();
+});
 
-                      <!-- Totales -->
-                      <div style="width:260px;">
-                          <div class="totals-panel">
-                              <div class="d-flex justify-content-between"><div>Sub-Total</div><div><strong id="subTotal">0.00</strong></div></div>
-                              <div class="d-flex justify-content-between mt-1"><div>Descuento Total</div><div id="descTotal">0.00</div></div>
-                              <div class="d-flex justify-content-between mt-1"><div>Impuesto</div><div id="impuesto">0.00</div></div>
-                              <hr/>
-                              <div class="d-flex justify-content-between"><div class="fw-bold">Total</div><div class="fw-bold" id="total">0.00</div></div>
+function calcularTotales() {
+    let subtotal = 0;
+    let descuentoTotal = 0;
+
+    document.querySelectorAll('#itemsBody tr').forEach(tr => {
+        const qty = parseFloat(tr.querySelector('.qty')?.value) || 0;
+        const price = parseFloat(tr.querySelector('.price')?.value) || 0;
+        const discount = parseFloat(tr.querySelector('.discount')?.value) || 0;
+
+        const totalFila = (qty * price) - discount;
+
+        subtotal += qty * price;
+        descuentoTotal += discount;
+
+        tr.querySelector('.valor-read').value = totalFila.toFixed(2);
+    });
+
+    const impuesto = subtotal * 0.15;
+    const total = subtotal - descuentoTotal + impuesto;
+
+    document.getElementById('subTotal').innerText = subtotal.toFixed(2);
+    document.getElementById('descTotal').innerText = descuentoTotal.toFixed(2);
+    document.getElementById('impuesto').innerText = impuesto.toFixed(2);
+    document.getElementById('total').innerText = total.toFixed(2);
+}
+
+/* AGREGAR PRIMERA FILA*/
+window.onload = () => {
+    agregarFila();
+};
+</script>
+
                               <div class="mt-2 text-center">
                                <button type="submit" class="btn btn-sm btn-outline-success">
     💾 Guardar
@@ -384,7 +366,7 @@ function handleInput() {
               </div>
           </form>
       </div>
-
+</table>
       <!-- Panel derecho -->
    <div class="col-lg-2 ps-0">
     <div class="right-panel position-sticky" style="top:0;">
