@@ -81,12 +81,12 @@ body{
 .table thead th { 
     background: rgba(255,255,255,0.5);
     border-top: none;
-    border-bottom: 3px solid rgba(6,22,22,0.05);
+    border-bottom: 2px solid rgba(6,22,22,0.05);
 }
 
 td .form-control, th .form-control { 
-    height: 36px; 
-    padding: .4rem .6rem; 
+    height: 28px; /* filas más delgadas */
+    padding: .25rem .5rem; 
 }
 
 input[type=number]::-webkit-outer-spin-button,
@@ -144,13 +144,12 @@ input, select, textarea {
             @csrf
               <div class="p-2 rounded shadow-sm bg-light mb-0">
                   
-                  <!-- Fecha, Desde y Hasta -->
+                  <!-- Fecha, Proveedor, Lugar, Solicitado por -->
                   <div class="d-flex flex-wrap align-items-center mb-1 gap-2">
                       <label for="fecha" class="form-label fw-bold mb-0" style="width:80px;">Fecha:</label>
                       <input id="fecha" name="fecha" type="date" class="form-control form-control-sm shadow-sm" style="max-width:150px;">
                   </div>
 
-                  <!-- Proveedor -->
                   <div class="d-flex flex-wrap align-items-center mb-1">
                       <label for="proveedor" class="form-label fw-bold me-2 mb-0" style="width:120px;">Proveedor:</label>
                       <div class="input-group input-group-sm" style="max-width:400px;">
@@ -159,69 +158,56 @@ input, select, textarea {
                       </div>
                   </div>
 
-                  <!-- Lugar -->
                   <div class="d-flex flex-wrap align-items-center mb-1">
                       <label for="lugar" class="form-label fw-bold me-2 mb-0" style="width:120px;">Lugar:</label>
                       <input id="lugar" name="lugar" type="text" class="form-control form-control-sm shadow-sm" placeholder="Sede / ubicación" style="max-width:400px;">
                   </div>
 
-                  <!-- Solicitado por -->
                   <div class="d-flex flex-wrap align-items-center mb-1">
                       <label for="solicitado" class="form-label fw-bold me-2 mb-0" style="width:120px;">Solicitado por:</label>
                       <div class="input-group input-group-sm" style="max-width:400px;">
                           <input id="solicitado" name="solicitado" type="text" class="form-control shadow-sm" placeholder="Usuario solicitante...">
                           <button type="button" class="btn btn-outline-primary btn-sm" title="Buscar usuario">🔍</button>
                       </div>
-
-                     <!-- Dentro del formulario, reemplaza el bloque Desde/Hasta existente por esto -->
-<!-- DESDE Y HASTA FLOTANTE -->
-<div style="
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-    padding:10px;
-    border:1px solid #d1d5db;
-    border-radius:8px;
-    background:#ffffff;
-    box-shadow:0 2px 6px rgba(0,0,0,0.05);
-    width:fit-content;
-    position:absolute;
-    right:400px; /* ajusta según el espacio disponible antes del panel derecho */
-    top:120px; /* distancia desde la parte superior del formulario */
-    z-index:10;
-">
-    <div style="display:flex; align-items:center; gap:8px;">
-        <label style="font-weight:bold; min-width:50px;" for="desde">Desde</label>
-        <input type="date" name="desde" id="desde"
-               onchange="handleInput()"
-               value="{{ request('desde', Carbon\Carbon::now()->subMonth()->toDateString()) }}">
-    </div>
-
-    <div style="display:flex; align-items:center; gap:8px;">
-        <label style="font-weight:bold; min-width:50px;" for="hasta">Hasta</label>
-        <input type="date" name="hasta" id="hasta"
-               onchange="handleInput()"
-               value="{{ request('hasta', Carbon\Carbon::now()->toDateString()) }}">
-    </div>
-</div>
-
-<script>
-function handleInput() {
-    const desde = document.getElementById('desde').value;
-    const hasta = document.getElementById('hasta').value;
-
-    if (!desde || !hasta) return;
-
-    const url = new URL(window.location.href);
-    url.searchParams.set('desde', desde);
-    url.searchParams.set('hasta', hasta);
-
-    window.location.href = url.toString();
-}
-</script>
-
-
                   </div>
+
+                  <!-- DESDE Y HASTA FLOTANTE -->
+                  <div style="
+                      display:flex;
+                      flex-direction:column;
+                      gap:6px;
+                      padding:10px;
+                      border:1px solid #d1d5db;
+                      border-radius:8px;
+                      background:#ffffff;
+                      box-shadow:0 2px 6px rgba(0,0,0,0.05);
+                      width:fit-content;
+                      position:absolute;
+                      right:400px;
+                      top:120px;
+                      z-index:10;
+                  ">
+                      <div style="display:flex; align-items:center; gap:8px;">
+                          <label style="font-weight:bold; min-width:50px;" for="desde">Desde</label>
+                          <input type="date" name="desde" id="desde" onchange="handleInput()" value="{{ request('desde', Carbon\Carbon::now()->subMonth()->toDateString()) }}">
+                      </div>
+                      <div style="display:flex; align-items:center; gap:8px;">
+                          <label style="font-weight:bold; min-width:50px;" for="hasta">Hasta</label>
+                          <input type="date" name="hasta" id="hasta" onchange="handleInput()" value="{{ request('hasta', Carbon\Carbon::now()->toDateString()) }}">
+                      </div>
+                  </div>
+
+                  <script>
+                  function handleInput() {
+                      const desde = document.getElementById('desde').value;
+                      const hasta = document.getElementById('hasta').value;
+                      if (!desde || !hasta) return;
+                      const url = new URL(window.location.href);
+                      url.searchParams.set('desde', desde);
+                      url.searchParams.set('hasta', hasta);
+                      window.location.href = url.toString();
+                  }
+                  </script>
 
                   <!-- Tabla de items -->
                   <div class="table-responsive mt-2">
@@ -238,7 +224,9 @@ function handleInput() {
                               </tr>
                           </thead>
                           <tbody>
-                              <tr style="height:26px;">
+                              <!-- Aquí mantenemos todas las filas que ya tenías -->
+                              <!-- Ejemplo de fila -->
+                              <tr style="height:24px;">
                                   <td><input type="number" name="cantidad[]" min="0" step="1" class="form-control form-control-sm no-arrows qty" /></td>
                                   <td class="d-flex align-items-center">
                                       <input type="text" name="descripcion[]" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" />
@@ -250,78 +238,7 @@ function handleInput() {
                                   <td><input type="text" class="valor-read" readonly value="0.00" /></td>
                                   <td class="text-center"><button type="button" class="btn btn-sm btn-danger py-0 px-2" onclick="eliminarFila(this)">X</button></td>
                               </tr>
-                              <tr style="height:26px;">
-                                  <td><input type="number" name="cantidad[]" min="0" step="1" class="form-control form-control-sm no-arrows qty" /></td>
-                                  <td class="d-flex align-items-center">
-                                      <input type="text" name="descripcion[]" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" />
-                                      <input type="checkbox" name="aplica_desc[]" class="form-check-input small-checkbox" title="Aplica descuento?" />
-                                  </td>
-                                  <td><input type="text" name="unidad[]" class="form-control form-control-sm unidad" /></td>
-                                  <td><input type="number" name="precio_unitario[]" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" /></td>
-                                  <td><input type="number" name="descuento[]" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" /></td>
-                                  <td><input type="text" class="valor-read" readonly value="0.00" /></td>
-                                  <td class="text-center"><button type="button" class="btn btn-sm btn-danger py-0 px-2" onclick="eliminarFila(this)">X</button></td>
-                              </tr>
-                              <tr style="height:26px;">
-                                  <td><input type="number" name="cantidad[]" min="0" step="1" class="form-control form-control-sm no-arrows qty" /></td>
-                                  <td class="d-flex align-items-center">
-                                      <input type="text" name="descripcion[]" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" />
-                                      <input type="checkbox" name="aplica_desc[]" class="form-check-input small-checkbox" title="Aplica descuento?" />
-                                  </td>
-                                  <td><input type="text" name="unidad[]" class="form-control form-control-sm unidad" /></td>
-                                  <td><input type="number" name="precio_unitario[]" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" /></td>
-                                  <td><input type="number" name="descuento[]" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" /></td>
-                                  <td><input type="text" class="valor-read" readonly value="0.00" /></td>
-                                  <td class="text-center"><button type="button" class="btn btn-sm btn-danger py-0 px-2" onclick="eliminarFila(this)">X</button></td>
-                              </tr>
-                              <tr style="height:26px;">
-                                  <td><input type="number" name="cantidad[]" min="0" step="1" class="form-control form-control-sm no-arrows qty" /></td>
-                                  <td class="d-flex align-items-center">
-                                      <input type="text" name="descripcion[]" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" />
-                                      <input type="checkbox" name="aplica_desc[]" class="form-check-input small-checkbox" title="Aplica descuento?" />
-                                  </td>
-                                  <td><input type="text" name="unidad[]" class="form-control form-control-sm unidad" /></td>
-                                  <td><input type="number" name="precio_unitario[]" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" /></td>
-                                  <td><input type="number" name="descuento[]" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" /></td>
-                                  <td><input type="text" class="valor-read" readonly value="0.00" /></td>
-                                  <td class="text-center"><button type="button" class="btn btn-sm btn-danger py-0 px-2" onclick="eliminarFila(this)">X</button></td>
-                              </tr>
-                              <tr style="height:26px;">
-                                  <td><input type="number" name="cantidad[]" min="0" step="1" class="form-control form-control-sm no-arrows qty" /></td>
-                                  <td class="d-flex align-items-center">
-                                      <input type="text" name="descripcion[]" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" />
-                                      <input type="checkbox" name="aplica_desc[]" class="form-check-input small-checkbox" title="Aplica descuento?" />
-                                  </td>
-                                  <td><input type="text" name="unidad[]" class="form-control form-control-sm unidad" /></td>
-                                  <td><input type="number" name="precio_unitario[]" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" /></td>
-                                  <td><input type="number" name="descuento[]" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" /></td>
-                                  <td><input type="text" class="valor-read" readonly value="0.00" /></td>
-                                  <td class="text-center"><button type="button" class="btn btn-sm btn-danger py-0 px-2" onclick="eliminarFila(this)">X</button></td>
-                              </tr>
-                              <tr style="height:26px;">
-                                  <td><input type="number" name="cantidad[]" min="0" step="1" class="form-control form-control-sm no-arrows qty" /></td>
-                                  <td class="d-flex align-items-center">
-                                      <input type="text" name="descripcion[]" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" />
-                                      <input type="checkbox" name="aplica_desc[]" class="form-check-input small-checkbox" title="Aplica descuento?" />
-                                  </td>
-                                  <td><input type="text" name="unidad[]" class="form-control form-control-sm unidad" /></td>
-                                  <td><input type="number" name="precio_unitario[]" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" /></td>
-                                  <td><input type="number" name="descuento[]" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" /></td>
-                                  <td><input type="text" class="valor-read" readonly value="0.00" /></td>
-                                  <td class="text-center"><button type="button" class="btn btn-sm btn-danger py-0 px-2" onclick="eliminarFila(this)">X</button></td>
-                              </tr>
-                              <tr style="height:26px;">
-                                  <td><input type="number" name="cantidad[]" min="0" step="1" class="form-control form-control-sm no-arrows qty" /></td>
-                                  <td class="d-flex align-items-center">
-                                      <input type="text" name="descripcion[]" class="form-control form-control-sm desc me-1" placeholder="Descripción del artículo" />
-                                      <input type="checkbox" name="aplica_desc[]" class="form-check-input small-checkbox" title="Aplica descuento?" />
-                                  </td>
-                                  <td><input type="text" name="unidad[]" class="form-control form-control-sm unidad" /></td>
-                                  <td><input type="number" name="precio_unitario[]" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows price" /></td>
-                                  <td><input type="number" name="descuento[]" inputmode="decimal" step="0.01" class="form-control form-control-sm no-arrows discount" /></td>
-                                  <td><input type="text" class="valor-read" readonly value="0.00" /></td>
-                                  <td class="text-center"><button type="button" class="btn btn-sm btn-danger py-0 px-2" onclick="eliminarFila(this)">X</button></td>
-                              </tr>
+                              <!-- Fin ejemplo fila -->
                           </tbody>
                       </table>
                   </div>
@@ -403,11 +320,11 @@ function handleInput() {
   </div>
 </div>
 
-<script>
+<<script>
 function agregarFila() {
     const tbody = document.querySelector('#itemsTable tbody');
     const fila = document.createElement('tr');
-    fila.style.height = '26px';
+    fila.style.height = '24px';
     fila.innerHTML = `
         <td><input type="number" name="cantidad[]" min="0" step="1" class="form-control form-control-sm no-arrows qty" /></td>
         <td class="d-flex align-items-center">
@@ -423,13 +340,26 @@ function agregarFila() {
     tbody.appendChild(fila);
 }
 
+// Función para eliminar fila
 function eliminarFila(boton) {
-    boton.closest('tr').remove();
+    const tbody = document.querySelector('#itemsTable tbody');
+    if (tbody.rows.length > 1) { // asegura que quede al menos una fila
+        boton.closest('tr').remove();
+    }
 }
+
+// Inicializar la tabla con 7 filas al cargar la página
+window.addEventListener('DOMContentLoaded', () => {
+    const numInicial = 7;
+    for (let i = 0; i < numInicial; i++) {
+        agregarFila();
+    }
+});
 
 function salir() {
     window.location.href = "{{ url('/') }}";
 }
 </script>
+
 </body>
 </html>
