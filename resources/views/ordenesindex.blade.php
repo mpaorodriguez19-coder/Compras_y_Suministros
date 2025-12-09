@@ -138,36 +138,92 @@ input, select, textarea {
 
   <!-- Formulario + Panel derecho -->
   <div class="row g-2 mb-0">
+    
       <!-- Formulario -->
       <div class="col-lg-10 pe-0">
           <form action="{{ route('orden.reponer.guardar') }}" method="POST">
     @csrf
-              <div class="p-2 rounded shadow-sm bg-light mb-0">
+     <div class="p-2 rounded shadow-sm bg-light mb-0">
+
+
                   <div class="d-flex flex-wrap align-items-center mb-1">
                       <label for="fecha" class="form-label fw-bold me-2 mb-0" style="width: 120px;">Fecha:</label>
-                      <input id="fecha" type="date" class="form-control form-control-sm shadow-sm" style="max-width: 200px;">
+                      <input id="fecha" name="fecha" type="date" class="form-control form-control-sm shadow-sm" style="max-width: 200px;">
                   </div>
 
                   <div class="d-flex flex-wrap align-items-center mb-1">
                       <label for="proveedor" class="form-label fw-bold me-2 mb-0" style="width: 120px;">Proveedor:</label>
                       <div class="input-group input-group-sm" style="max-width: 400px;">
-                          <input id="proveedor" type="text" class="form-control shadow-sm" placeholder="Proveedor...">
+                          <input id="proveedor" name="proveedor" type="text" class="form-control shadow-sm" placeholder="Proveedor...">
                           <button type="button" class="btn btn-outline-primary btn-sm" title="Buscar proveedor">🔍</button>
                       </div>
                   </div>
 
                   <div class="d-flex flex-wrap align-items-center mb-1">
                       <label for="lugar" class="form-label fw-bold me-2 mb-0" style="width: 120px;">Lugar:</label>
-                      <input id="lugar" type="text" class="form-control form-control-sm shadow-sm" placeholder="Sede / ubicación" style="max-width: 400px;">
+                      <input id="lugar" name="lugar" type="text" class="form-control form-control-sm shadow-sm" placeholder="Sede / ubicación" style="max-width: 400px;">
                   </div>
 
                   <div class="d-flex flex-wrap align-items-center mb-1">
                       <label for="solicitado" class="form-label fw-bold me-2 mb-0" style="width: 120px;">Solicitado por:</label>
                       <div class="input-group input-group-sm" style="max-width: 400px;">
-                          <input id="solicitado" type="text" class="form-control shadow-sm" placeholder="Usuario solicitante...">
+                          <input id="solicitado" name="solicitado" type="text" class="form-control shadow-sm" placeholder="Usuario solicitante...">
                           <button type="button" class="btn btn-outline-primary btn-sm" title="Buscar usuario">🔍</button>
                       </div>
+   <!-- DESDE Y HASTA -->
+                  <div style="
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    padding:10px;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    background:#ffffff;
+    box-shadow:0 2px 6px rgba(0,0,0,0.05);
+    width:fit-content;
+
+     position:absolute;
+    right:400px;
+    top:25%;
+    transform: translateY(-50%);
+">
+
+    <div style="display:flex; align-items:center; gap:8px;">
+        <label style="font-weight:bold; min-width:50px;" for="desde">Desde</label>
+        <input type="date" name="desde" id="desde"
+               onchange="handleInput()"
+               value="{{ request('desde', Carbon\Carbon::now()->subMonth()->toDateString()) }}">
+    </div>
+
+    <div style="display:flex; align-items:center; gap:8px;">
+        <label style="font-weight:bold; min-width:50px;" for="hasta">Hasta</label>
+        <input type="date" name="hasta" id="hasta"
+               onchange="handleInput()"
+               value="{{ request('hasta', Carbon\Carbon::now()->toDateString()) }}">
+    </div>
+
+</div>
+<script>
+function handleInput() {
+    const desde = document.getElementById('desde').value;
+    const hasta = document.getElementById('hasta').value;
+
+    if (!desde || !hasta) {
+        return; // no hace nada hasta que estén las dos fechas
+    }
+
+    const url = new URL(window.location.href);
+    url.searchParams.set('desde', desde);
+    url.searchParams.set('hasta', hasta);
+
+    window.location.href = url.toString();
+}
+</script>
+
+
                   </div>
+
+
 
                   <!-- ---------------- SECCION TABLA Y PANEL DERECHO ---------------- -->
                   <div class="table-responsive mt-2">
@@ -302,7 +358,7 @@ input, select, textarea {
                       <!-- Concepto -->
                       <div class="flex-grow-1">
                           <label class="form-label">Concepto</label>
-                          <textarea id="concepto" rows="3" class="form-control"></textarea>
+                          <textarea id="concepto" name="concepto" rows="3" class="form-control"></textarea>
                           <div class="mt-1">
                               <button type="button" class="btn btn-outline-primary btn-sm" onclick="agregarFila()">+ Agregar fila</button>
                           </div>
@@ -317,9 +373,9 @@ input, select, textarea {
                               <hr/>
                               <div class="d-flex justify-content-between"><div class="fw-bold">Total</div><div class="fw-bold" id="total">0.00</div></div>
                               <div class="mt-2 text-center">
-                                <button type="submit" class="btn btn-sm btn-outline-success">
-        💾 Guardar
-    </button>
+                               <button type="submit" class="btn btn-sm btn-outline-success">
+    💾 Guardar
+</button>
                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="salir()">Salir</button>
                               </div>
                           </div>
@@ -333,6 +389,8 @@ input, select, textarea {
    <div class="col-lg-2 ps-0">
     <div class="right-panel position-sticky" style="top:0;">
         <div class="d-flex flex-column mb-2">
+            <div class="mb-2">
+
             <input type="number" id="numeroBuscar" class="form-control shadow-sm mb-1"
                    placeholder="N°" style="border-radius:6px; height:38px; font-size:14px;"/>
             <button type="button" class="btn btn-outline-primary w-100"
