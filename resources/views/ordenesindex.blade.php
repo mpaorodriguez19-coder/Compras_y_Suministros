@@ -133,7 +133,7 @@ input, select, textarea {
 
   <!-- Barra superior -->
   <div class="header-bar">
-      <h4 class="m-0">Orden de Compra MELBA</h4>
+      <h4 class="m-0">Orden de Compra</h4>
   </div>
 
   <!-- Formulario + Panel derecho -->
