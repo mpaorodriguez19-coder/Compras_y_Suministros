@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Orden de Compra MELBA</title>
+    <title>Orden de Compra</title>
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -72,11 +72,13 @@
 
     <table class="tabla-header">
         <tr>
-            <td><strong>LUGAR:</strong> _____________________________</td>
-            <td><strong>FECHA:</strong> _____________________________</td>
+           <td><strong>LUGAR:</strong> {{ $orden->lugar }}</td>
+<td><strong>FECHA:</strong> {{ \Carbon\Carbon::parse($orden->fecha)->format('d/m/Y') }}</td>
+
         </tr>
         <tr>
-            <td colspan="2"><strong>A:</strong> ____________________________________________________</td>
+          <td colspan="2"><strong>A:</strong> {{ $orden->proveedor }}</td>
+
         </tr>
     </table>
 
@@ -97,47 +99,63 @@
             </tr>
         </thead>
         <tbody>
-            @for ($i = 1; $i <= 10; $i++)
-                <tr>
-                    <td>{{ $i }}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            @endfor
-        </tbody>
+@php
+    $subTotal = 0;
+    $descuentoTotal = 0;
+@endphp
+
+@foreach ($orden->items as $i => $item)
+@php
+    $subTotal += $item->cantidad * $item->precio_unitario;
+    $descuentoTotal += $item->descuento;
+@endphp
+<tr>
+    <td>{{ $i + 1 }}</td>
+    <td style="text-align:left">{{ $item->descripcion }}</td>
+    <td>{{ $item->unidad }}</td>
+    <td>{{ $item->cantidad }}</td>
+    <td>{{ number_format($item->precio_unitario, 2) }}</td>
+    <td>{{ number_format($item->valor, 2) }}</td>
+</tr>
+@endforeach
+</tbody>
     </table>
 
-    <table class="subtotales">
-        <tr>
-            <td><strong>Sub - Total L.</strong></td>
-            <td>_________</td>
-        </tr>
-        <tr>
-            <td><strong>Descuento.</strong></td>
-            <td>_________</td>
-        </tr>
-        <tr>
-            <td><strong>Impuesto.</strong></td>
-            <td>_________</td>
-        </tr>
-        <tr>
-            <td><strong>Total Pago:</strong></td>
-            <td>_________</td>
-        </tr>
-    </table>
+   @php
+    $impuesto = $subTotal * 0.15;
+    $total = $subTotal - $descuentoTotal + $impuesto;
+@endphp
+
+<table class="subtotales">
+    <tr>
+        <td><strong>Sub - Total L.</strong></td>
+        <td>{{ number_format($subTotal, 2) }}</td>
+    </tr>
+    <tr>
+        <td><strong>Descuento</strong></td>
+        <td>{{ number_format($descuentoTotal, 2) }}</td>
+    </tr>
+    <tr>
+        <td><strong>Impuesto (15%)</strong></td>
+        <td>{{ number_format($impuesto, 2) }}</td>
+    </tr>
+    <tr>
+        <td><strong>Total Pago</strong></td>
+        <td><strong>{{ number_format($total, 2) }}</strong></td>
+    </tr>
+</table>
+
 
     <div style="clear: both;"></div>
 
-    <p style="margin-top: 40px;">
-        UTILIZADOS POR: ______________________________________________________________
-    </p>
+   <p>
+    UTILIZADOS POR: {{ $orden->lugar }}
+</p>
 
-    <p>
-        SOLICITADO POR: ______________________________________________________________
-    </p>
+<p>
+    SOLICITADO POR: {{ $orden->solicitado_por }}
+</p>
+
 
     <br><br>
 
