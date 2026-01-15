@@ -3,174 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <title>Orden de Compra</title>
-    <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 13px;
-            margin: 40px;
-        }
-
-        .titulo-centro {
-            text-align: center;
-            font-weight: bold;
-            font-size: 16px;
-        }
-
-        .tabla-header {
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .tabla-header td {
-            vertical-align: top;
-        }
-
-        .tabla-detalle {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        .tabla-detalle th, .tabla-detalle td {
-            border: 1px solid black;
-            padding: 5px;
-            font-size: 12px;
-            text-align: center;
-        }
-
-        .firma {
-            margin-top: 40px;
-            width: 100%;
-            text-align: center;
-        }
-
-        .firmas td {
-            padding-top: 50px;
-        }
-
-        .subtotales {
-            width: 40%;
-            float: right;
-            margin-top: 10px;
-            border: 1px solid black;
-            padding: 10px;
-        }
-
-        .subtotales td {
-            padding: 3px;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="p-4">
 
-    <div class="titulo-centro">
-        MUNICIPALIDAD DE DANLÍ, EL PARAÍSO<br>
-        Departamento de El Paraíso, Honduras, C.A.<br>
-        Teléfonos: 2763-2080 / 2763-2405 &nbsp;&nbsp;&nbsp; Fax: 2763-2638<br>
-        <h3>ORDEN DE COMPRA No. ___________</h3>
+<h4 class="text-center mb-4">ORDEN DE COMPRA</h4>
+
+<form method="POST" action="{{ route('orden.reponer.guardar') }}">
+@csrf
+
+<div class="row mb-3">
+    <div class="col-md-3">
+        <label>Fecha</label>
+        <input type="date" name="fecha" class="form-control" required>
     </div>
 
-    <table class="tabla-header">
-        <tr>
-           <td><strong>LUGAR:</strong> {{ $orden->lugar }}</td>
-<td><strong>FECHA:</strong> {{ \Carbon\Carbon::parse($orden->fecha)->format('d/m/Y') }}</td>
+    <div class="col-md-5">
+        <label>Proveedor</label>
+        <input type="text" name="proveedor" class="form-control" required>
+    </div>
 
-        </tr>
-        <tr>
-          <td colspan="2"><strong>A:</strong> {{ $orden->proveedor }}</td>
+    <div class="col-md-4">
+        <label>Lugar</label>
+        <input type="text" name="lugar" class="form-control">
+    </div>
+</div>
 
-        </tr>
-    </table>
+<div class="row mb-3">
+    <div class="col-md-6">
+        <label>Solicitado por</label>
+        <input type="text" name="solicitado_por" class="form-control">
+    </div>
 
-    <p>
-        Estimados señores:<br>
-        Agradecemos entregar los materiales o prestar los servicios indicados en el siguiente cuadro:
-    </p>
+    <div class="col-md-6">
+        <label>Concepto</label>
+        <textarea name="concepto" class="form-control"></textarea>
+    </div>
+</div>
 
-    <table class="tabla-detalle">
-        <thead>
-            <tr>
-                <th>No.</th>
-                <th>DESCRIPCIÓN</th>
-                <th>UNIDAD</th>
-                <th>CANTIDAD</th>
-                <th>PRECIO U.</th>
-                <th>VALOR L.</th>
-            </tr>
-        </thead>
-        <tbody>
-@php
-    $subTotal = 0;
-    $descuentoTotal = 0;
-@endphp
-
-@foreach ($orden->items as $i => $item)
-@php
-    $subTotal += $item->cantidad * $item->precio_unitario;
-    $descuentoTotal += $item->descuento;
-@endphp
+<table class="table table-bordered">
+<thead class="table-light text-center">
 <tr>
-    <td>{{ $i + 1 }}</td>
-    <td style="text-align:left">{{ $item->descripcion }}</td>
-    <td>{{ $item->unidad }}</td>
-    <td>{{ $item->cantidad }}</td>
-    <td>{{ number_format($item->precio_unitario, 2) }}</td>
-    <td>{{ number_format($item->valor, 2) }}</td>
+    <th>Cant</th>
+    <th>Descripción</th>
+    <th>Unidad</th>
+    <th>Precio</th>
+    <th>Descuento</th>
 </tr>
-@endforeach
+</thead>
+<tbody>
+<tr>
+    <td><input type="number" name="cantidad[]" class="form-control" required></td>
+    <td><input type="text" name="descripcion[]" class="form-control" required></td>
+    <td><input type="text" name="unidad[]" class="form-control"></td>
+    <td><input type="number" name="precio_unitario[]" step="0.01" class="form-control" required></td>
+    <td><input type="number" name="descuento[]" step="0.01" class="form-control"></td>
+</tr>
 </tbody>
-    </table>
-
-   @php
-    $impuesto = $subTotal * 0.15;
-    $total = $subTotal - $descuentoTotal + $impuesto;
-@endphp
-
-<table class="subtotales">
-    <tr>
-        <td><strong>Sub - Total L.</strong></td>
-        <td>{{ number_format($subTotal, 2) }}</td>
-    </tr>
-    <tr>
-        <td><strong>Descuento</strong></td>
-        <td>{{ number_format($descuentoTotal, 2) }}</td>
-    </tr>
-    <tr>
-        <td><strong>Impuesto (15%)</strong></td>
-        <td>{{ number_format($impuesto, 2) }}</td>
-    </tr>
-    <tr>
-        <td><strong>Total Pago</strong></td>
-        <td><strong>{{ number_format($total, 2) }}</strong></td>
-    </tr>
 </table>
 
+<div class="text-center">
+    <button type="submit" class="btn btn-success px-4">Guardar y Generar PDF</button>
+</div>
 
-    <div style="clear: both;"></div>
-
-   <p>
-    UTILIZADOS POR: {{ $orden->lugar }}
-</p>
-
-<p>
-    SOLICITADO POR: {{ $orden->solicitado_por }}
-</p>
-
-
-    <br><br>
-
-    <table class="firmas" width="100%">
-        <tr>
-            <td>_____________________________<br>Jefe de Compras</td>
-            <td>_____________________________<br>Gerente Administrativo</td>
-            <td>_____________________________<br>Alcalde Municipal</td>
-        </tr>
-    </table>
-
-    <p style="margin-top: 40px;">
-        <strong>Copia</strong> &nbsp;&nbsp;&nbsp;&nbsp; Hecho por: ______________________
-    </p>
-
+</form>
 </body>
 </html>
+
+
 

@@ -2,17 +2,54 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Orden de Compra MELBA</title>
+    <title>Orden de Compra</title>
+
     <style>
-        body { font-family: Arial, Helvetica, sans-serif; font-size: 13px; margin: 40px; }
-        .titulo-centro { text-align: center; font-weight: bold; font-size: 16px; }
-        .tabla-header { width: 100%; margin-top: 10px; }
-        .tabla-header td { vertical-align: top; }
-        .tabla-detalle { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .tabla-detalle th, .tabla-detalle td { border: 1px solid black; padding: 5px; font-size: 12px; text-align: center; }
-        .subtotales { width: 40%; float: right; margin-top: 10px; border: 1px solid black; padding: 10px; }
-        .subtotales td { padding: 3px; }
-        .firmas td { padding-top: 50px; text-align:center; }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            margin: 40px;
+        }
+
+        .titulo-centro {
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .tabla-header {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .tabla-header td {
+            vertical-align: top;
+        }
+
+        .tabla-detalle {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .tabla-detalle th, .tabla-detalle td {
+            border: 1px solid black;
+            padding: 5px;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .subtotales {
+            width: 40%;
+            float: right;
+            margin-top: 10px;
+            border: 1px solid black;
+            padding: 10px;
+        }
+
+        .subtotales td {
+            padding: 3px;
+        }
     </style>
 </head>
 <body>
@@ -21,7 +58,7 @@
     MUNICIPALIDAD DE DANLÍ, EL PARAÍSO<br>
     Departamento de El Paraíso, Honduras, C.A.<br>
     Teléfonos: 2763-2080 / 2763-2405 &nbsp;&nbsp;&nbsp; Fax: 2763-2638<br>
-    <h3>ORDEN DE COMPRA No. {{ str_pad($orden->id, 6, '0', STR_PAD_LEFT) }}</h3>
+    <h3>ORDEN DE COMPRA No. {{ $orden->id }}</h3>
 </div>
 
 <table class="tabla-header">
@@ -51,25 +88,27 @@
         </tr>
     </thead>
     <tbody>
-        @php
-            $subTotal = 0;
-            $descuentoTotal = 0;
-        @endphp
 
-        @foreach ($orden->items as $i => $item)
-            @php
-                $subTotal += $item->cantidad * $item->precio_unitario;
-                $descuentoTotal += $item->descuento;
-            @endphp
-            <tr>
-                <td>{{ $i + 1 }}</td>
-                <td style="text-align:left">{{ $item->descripcion }}</td>
-                <td>{{ $item->unidad }}</td>
-                <td>{{ $item->cantidad }}</td>
-                <td>{{ number_format($item->precio_unitario, 2) }}</td>
-                <td>{{ number_format($item->valor, 2) }}</td>
-            </tr>
-        @endforeach
+@php
+    $subTotal = 0;
+    $descuentoTotal = 0;
+@endphp
+
+@foreach ($orden->items as $i => $item)
+@php
+    $subTotal += $item->cantidad * $item->precio_unitario;
+    $descuentoTotal += $item->descuento;
+@endphp
+<tr>
+    <td>{{ $i + 1 }}</td>
+    <td style="text-align:left">{{ $item->descripcion }}</td>
+    <td>{{ $item->unidad }}</td>
+    <td>{{ $item->cantidad }}</td>
+    <td>{{ number_format($item->precio_unitario, 2) }}</td>
+    <td>{{ number_format($item->valor, 2) }}</td>
+</tr>
+@endforeach
+
     </tbody>
 </table>
 
@@ -97,10 +136,14 @@
     </tr>
 </table>
 
-<p style="margin-top: 40px;">UTILIZADOS POR: {{ $orden->lugar }}</p>
+<div style="clear: both;"></div>
+
+<p>UTILIZADOS POR: {{ $orden->lugar }}</p>
 <p>SOLICITADO POR: {{ $orden->solicitado_por }}</p>
 
-<table class="firmas" width="100%">
+<br><br>
+
+<table width="100%">
     <tr>
         <td>_____________________________<br>Jefe de Compras</td>
         <td>_____________________________<br>Gerente Administrativo</td>
@@ -110,3 +153,6 @@
 
 </body>
 </html>
+
+
+
