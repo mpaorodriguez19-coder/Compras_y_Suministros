@@ -9,6 +9,7 @@ use App\Models\Proveedor;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
 
 class OrdenController extends Controller
 {
@@ -44,6 +45,9 @@ class OrdenController extends Controller
     /*  GUARDAR ORDEN + ITEMS (TABLA DINÁMICA) */
     public function store(Request $request)
     {
+        Log::info('OrdenController@store called', ['ip' => $request->ip(), 'payload_keys' => array_keys($request->all())]);
+
+        // Validate based on the form inputs (arrays with [] names)
         $request->validate([
             'fecha' => 'required|date',
             'proveedor' => 'nullable|string',
@@ -51,64 +55,126 @@ class OrdenController extends Controller
             'solicitado' => 'nullable|string',
             'concepto' => 'nullable|string',
 
-            'items' => 'required|array|min:1',
-            'items.*.descripcion' => 'required|string',
-            'items.*.unidad' => 'nullable|string',
-            'items.*.cantidad' => 'required|numeric|min:1',
-            'items.*.precio' => 'required|numeric|min:0',
-            'items.*.descuento' => 'nullable|numeric|min:0',
+            // Arrays must be present, but individual elements can be empty because the JS pre-populates rows
+            'descripcion' => 'required|array|min:1',
+            'cantidad' => 'required|array|min:1',
+            'precio_unitario' => 'required|array|min:1',
+            'descuento' => 'nullable|array',
+            'unidad' => 'nullable|array',
         ]);
 
         DB::beginTransaction();
 
-    try {
+        try {
+            Log::info('OrdenController@store validation passed');
 
-        /* ---------- CREAR ORDEN ---------- */
-        $orden = Orden::create([
-            'fecha'          => $request->fecha,
-            'proveedor'      => $request->proveedor,
-            'lugar'          => $request->lugar,
-            'solicitado_por' => $request->solicitado,
-            'concepto'       => $request->concepto,
-            'estado'         => 'pendiente',
-        ]);
+            // Compute a sequential numero (6 digits) like in create()
+            $ultimo = Orden::latest('id')->first();
+            $numero = $ultimo ? $ultimo->id + 1 : 1;
+            $numero = str_pad($numero, 6, '0', STR_PAD_LEFT);
 
-        /* ---------- GUARDAR ITEMS ---------- */
-        foreach ($request->items as $item) {
-
-            if (
-                empty($item['descripcion']) ||
-                empty($item['cantidad']) ||
-                empty($item['precio'])
-            ) {
-                continue;
+            // Map proveedor/solicitado to *_id if numeric (form provides free text so allow null)
+            $proveedor_id = null;
+            if ($request->filled('proveedor') && is_numeric($request->proveedor)) {
+                $proveedor_id = (int) $request->proveedor;
             }
 
-            $descuento = $item['descuento'] ?? 0;
-            $total = ($item['cantidad'] * $item['precio']) - $descuento;
+            $solicitante_id = null;
+            if ($request->filled('solicitado') && is_numeric($request->solicitado)) {
+                $solicitante_id = (int) $request->solicitado;
+            }
 
-            OrdenItem::create([
-                'orden_id'        => $orden->id,
-                'descripcion'     => $item['descripcion'],
-                'unidad'          => $item['unidad'] ?? null,
-                'cantidad'        => $item['cantidad'],
-                'precio_unitario' => $item['precio'],
-                'descuento'       => $descuento,
-                'valor'           => $total,
+            // Calculate totals from submitted rows
+            $subtotal = 0;
+            $descuentoTotal = 0;
+            $impuesto = 0; // keep 0 for now or compute if you have tax rules
+
+            $rows = max(count($request->descripcion ?? []), count($request->cantidad ?? []), count($request->precio_unitario ?? []));
+
+            // Filter and prepare valid item rows
+            $validItems = [];
+            for ($i = 0; $i < $rows; $i++) {
+                $descripcion = trim($request->descripcion[$i] ?? '');
+                $cantidad = isset($request->cantidad[$i]) ? (float) $request->cantidad[$i] : 0;
+                $unidad = $request->unidad[$i] ?? null;
+                $precio = isset($request->precio_unitario[$i]) ? (float) $request->precio_unitario[$i] : 0;
+                $descuento = isset($request->descuento[$i]) ? (float) $request->descuento[$i] : 0;
+
+                // Only accept rows with a description and a positive quantity and a price >= 0
+                if ($descripcion !== '' && $cantidad > 0 && $precio >= 0) {
+                    $validItems[] = [
+                        'descripcion' => $descripcion,
+                        'cantidad' => $cantidad,
+                        'unidad' => $unidad,
+                        'precio' => $precio,
+                        'descuento' => $descuento,
+                    ];
+                }
+            }
+
+            if (count($validItems) === 0) {
+                // No valid lines to save
+                return back()->withInput()->with('error', 'Debe ingresar al menos una línea con descripción, cantidad y precio.');
+            }
+
+            // Create the orden
+            $orden = Orden::create([
+                'numero' => $numero,
+                'fecha' => $request->fecha,
+                'proveedor_id' => $proveedor_id,
+                'lugar' => $request->lugar,
+                'solicitante_id' => $solicitante_id,
+                'subtotal' => 0, // temporary, will update after items
+                'descuento' => 0,
+                'impuesto' => $impuesto,
+                'total' => 0,
+                'estado' => 'pendiente',
             ]);
+
+            // Save items and compute totals
+            foreach ($validItems as $item) {
+                $valor = ($item['cantidad'] * $item['precio']) - $item['descuento'];
+
+                OrdenItem::create([
+                    'orden_id' => $orden->id,
+                    'descripcion' => $item['descripcion'],
+                    'unidad' => $item['unidad'],
+                    'cantidad' => $item['cantidad'],
+                    'precio_unitario' => $item['precio'],
+                    'descuento' => $item['descuento'],
+                    'valor' => $valor,
+                ]);
+
+                $subtotal += ($item['cantidad'] * $item['precio']);
+                $descuentoTotal += $item['descuento'];
+            }
+
+            $total = $subtotal - $descuentoTotal + $impuesto;
+
+            // Update orden totals
+            $orden->update([
+                'subtotal' => $subtotal,
+                'descuento' => $descuentoTotal,
+                'impuesto' => $impuesto,
+                'total' => $total,
+            ]);
+
+            DB::commit();
+
+            Log::info('OrdenController@store committed', ['orden_id' => $orden->id]);
+
+            // Redirect to PDF view
+            return redirect()->route('orden.pdf', $orden->id);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            Log::error('OrdenController@store Exception: ' . $e->getMessage(), ['exception' => $e]);
+
+            // Return with the actual error message to help debug (remove in production)
+            return back()->with('error', 'Error al guardar la orden: ' . $e->getMessage());
         }
-
-        DB::commit();
-
-        /* 👉 PASO 4: MOSTRAR PDF AUTOMÁTICAMENTE */
-        return redirect()->route('orden.pdf', $orden->id);
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-
-        return back()->with('error', 'Error al guardar la orden');
     }
-}
 
     /* MOSTRAR FORMULARIO REPONER  */
     public function reponer()

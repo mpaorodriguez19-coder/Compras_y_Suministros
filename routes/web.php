@@ -5,6 +5,9 @@ use App\Http\Controllers\OrdenCompraController;
 use App\Http\Controllers\PanelController;
 use App\Http\Controllers\OrdenController;
 
+
+
+
 /* HOME */
 Route::get('/', [OrdenCompraController::class, 'index'])
     ->name('home');

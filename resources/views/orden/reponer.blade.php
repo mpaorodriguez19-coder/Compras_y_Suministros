@@ -32,7 +32,7 @@
 <div class="row mb-3">
     <div class="col-md-6">
         <label>Solicitado por</label>
-        <input type="text" name="solicitado_por" class="form-control">
+        <input type="text" name="solicitado" class="form-control">
     </div>
 
     <div class="col-md-6">
@@ -69,6 +69,3 @@
 </form>
 </body>
 </html>
-
-
-
