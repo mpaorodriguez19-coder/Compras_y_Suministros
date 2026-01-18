@@ -5,30 +5,41 @@ use App\Http\Controllers\OrdenCompraController;
 use App\Http\Controllers\PanelController;
 use App\Http\Controllers\OrdenController;
 
-
-
-
 /* HOME */
 Route::get('/', [OrdenCompraController::class, 'index'])
     ->name('home');
 
 /* ÓRDENES */
 
-/* Órdenes en espera */
-Route::get('/orden/espera', [OrdenController::class, 'enEspera'])
-    ->name('orden.espera');
 
-/* Formulario Reponer */
+/* ===============================
+   FORMULARIO REPONER
+================================ */
 Route::get('/orden/reponer', [OrdenController::class, 'reponer'])
     ->name('orden.reponer');
 
-/* Guardar Reponer + REDIRECCIONA AL PDF */
+
+/* ===============================
+   GUARDAR ORDEN (REPONER)
+   y REDIRIGE A LA VISTA PDF
+================================ */
 Route::post('/orden/reponer/guardar', [OrdenController::class, 'store'])
     ->name('orden.reponer.guardar');
 
-/* VER PDF DE LA ORDEN (AUTOMÁTICO) */
+
+/* ===============================
+   MOSTRAR ORDEN RECIÉN GUARDADA
+================================ */
+Route::get('/orden/espera', [OrdenController::class, 'verEspera'])
+    ->name('orden.espera');
+  
+
+/* ===============================
+   GENERAR PDF REAL (DOMPDF)
+================================ */
 Route::get('/orden/{id}/pdf', [OrdenController::class, 'pdf'])
     ->name('orden.pdf');
+
 
 /* INFORMES / PANEL */
 

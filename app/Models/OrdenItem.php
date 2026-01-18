@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class OrdenItem extends Model
 {
-    protected $table = 'orden_items'; // Nombre real de tu tabla
+    use HasFactory;
 
     protected $fillable = [
         'orden_id',
+        'cantidad',
         'descripcion',
         'unidad',
-        'cantidad',
         'precio_unitario',
         'descuento',
         'valor'
@@ -20,8 +21,6 @@ class OrdenItem extends Model
 
     public function orden()
     {
-        return $this->belongsTo(Orden::class, 'orden_id');
+        return $this->belongsTo(Orden::class, 'orden_id', 'id');
     }
 }
-
-

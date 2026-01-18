@@ -23,16 +23,13 @@
         font-size:13px;
     }
 
-    /* ================= ENCABEZADO ================= */
     .encabezado{
         display:flex;
         align-items:center;
         justify-content:space-between;
     }
 
-    .logo{
-        width:80px;
-    }
+    .logo{ width:80px; }
 
     .centro{
         text-align:center;
@@ -46,13 +43,8 @@
         font-weight:bold;
     }
 
-    .centro small{
-        font-size:12px;
-    }
-
     .orden-num{
-        text-align:right;
-        font-size:13px;
+        margin-top:5px;
         font-weight:bold;
     }
 
@@ -67,26 +59,15 @@
         margin:10px 0;
     }
 
-    /* ================= DATOS ================= */
-    .datos{
-        width:100%;
-        margin-top:10px;
-    }
-
     .fila{
         display:flex;
         margin-bottom:5px;
     }
 
-    .fila div{
-        flex:1;
-    }
+    .fila div{ flex:1; }
 
-    .etiqueta{
-        font-weight:bold;
-    }
+    .etiqueta{ font-weight:bold; }
 
-    /* ================= TABLA ================= */
     table{
         width:100%;
         border-collapse:collapse;
@@ -104,15 +85,9 @@
         text-align:center;
     }
 
-    td{
-        text-align:center;
-    }
+    td{ text-align:center; }
+    .desc{ text-align:left; }
 
-    .desc{
-        text-align:left;
-    }
-
-    /* ================= TOTALES ================= */
     .totales{
         width:100%;
         margin-top:10px;
@@ -120,11 +95,8 @@
         justify-content:flex-end;
     }
 
-    .totales table{
-        width:40%;
-    }
+    .totales table{ width:40%; }
 
-    /* ================= FIRMAS ================= */
     .firmas{
         margin-top:40px;
         display:flex;
@@ -132,16 +104,13 @@
         text-align:center;
     }
 
-    .firma{
-        width:40%;
-    }
+    .firma{ width:40%; }
 
     .linea-firma{
         border-top:1px solid black;
         margin-top:40px;
     }
 
-    /* ================= IMPRIMIR ================= */
     .btn-imprimir{
         position:fixed;
         top:20px;
@@ -170,26 +139,20 @@
 
     <!-- ENCABEZADO -->
     <div class="encabezado">
+        <img src="{{ public_path('imagenes/logo_izq.png') }}" class="logo">
 
-     <!-- LOGO IZQUIERDO -->
-            <div>
-                <img src="imagenes/logo_izq.png" class="logo">
-            </div>
-    
         <div class="centro">
             <h2>MUNICIPALIDAD DE DANLÍ, EL PARAÍSO</h2>
             <small>Departamento de El Paraíso, Honduras C.A.</small><br>
             <small>Tel: 2763-2080 / 2763-2405</small>
-            <h3>ORDEN DE COMPRA</h3>   <div class="orden-num">
-            ORDEN No.
-            <span></span>
-        </div>
-        </div>
- 
-       
-          <div>
-                <img src="imagenes/logo_der.png" class="logo">
+            <h3>ORDEN DE COMPRA</h3>
+
+            <div class="orden-num">
+                ORDEN No. <span>{{ $orden->numero }}</span>
             </div>
+        </div>
+
+        <img src="{{ public_path('imagenes/logo_der.png') }}" class="logo">
     </div>
 
     <hr>
@@ -197,13 +160,13 @@
     <!-- DATOS -->
     <div class="datos">
         <div class="fila">
-            <div><span class="etiqueta">Lugar:</span> Danlí, El Paraíso</div>
-            <div><span class="etiqueta">Fecha:</span> </div>
+            <div><span class="etiqueta">Lugar:</span> {{ $orden->lugar }}</div>
+            <div><span class="etiqueta">Fecha:</span> {{ \Carbon\Carbon::parse($orden->fecha)->format('d/m/Y') }}</div>
         </div>
 
         <div class="fila">
-            <div><span class="etiqueta">A:</span> </div>
-            <div><span class="etiqueta">RTN:</span> </div>
+            <div><span class="etiqueta">A:</span> {{ $orden->proveedor->nombre ?? '—' }}</div>
+            <div><span class="etiqueta">RTN:</span> {{ $orden->proveedor->rtn ?? '—' }}</div>
         </div>
     </div>
 
@@ -226,14 +189,20 @@
             </tr>
         </thead>
         <tbody>
+            @forelse($orden->items as $i => $item)
             <tr>
-                <td></td>
-                <td class="desc"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{ $i + 1 }}</td>
+                <td class="desc">{{ $item->descripcion }}</td>
+                <td>{{ $item->unidad ?? '—' }}</td>
+                <td>{{ $item->cantidad }}</td>
+                <td>L. {{ number_format($item->precio_unitario, 2) }}</td>
+                <td>L. {{ number_format($item->cantidad * $item->precio_unitario, 2) }}</td>
             </tr>
+            @empty
+            <tr>
+                <td colspan="6">No hay items registrados</td>
+            </tr>
+            @endforelse
         </tbody>
     </table>
 
@@ -241,8 +210,20 @@
     <div class="totales">
         <table>
             <tr>
-                <th></th>
-                <td></td>
+                <th>Subtotal</th>
+                <td>L. {{ number_format($orden->subtotal, 2) }}</td>
+            </tr>
+            <tr>
+                <th>Descuento</th>
+                <td>L. {{ number_format($orden->descuento, 2) }}</td>
+            </tr>
+            <tr>
+                <th>Impuesto</th>
+                <td>L. {{ number_format($orden->impuesto, 2) }}</td>
+            </tr>
+            <tr>
+                <th>Total</th>
+                <td><strong>L. {{ number_format($orden->total, 2) }}</strong></td>
             </tr>
         </table>
     </div>
@@ -251,7 +232,8 @@
     <div class="firmas">
         <div class="firma">
             <div class="linea-firma"></div>
-            Elaborado por
+            Elaborado por<br>
+            {{ $orden->solicitante->name ?? '—' }}
         </div>
 
         <div class="firma">

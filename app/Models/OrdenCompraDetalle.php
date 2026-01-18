@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Orden;
 
 class OrdenCompraDetalle extends Model
 {
+    // 🔹 Tabla correcta
     protected $table = 'orden_compra_detalles';
 
+    // 🔹 Campos que se pueden asignar masivamente
     protected $fillable = [
-        'orden_compra_id',
+        'orden_compra_id',   // FK a ordenes
         'cantidad',
         'descripcion',
         'unidad',
@@ -18,15 +21,13 @@ class OrdenCompraDetalle extends Model
         'valor',
     ];
 
-    /* Los detalles de la compra pertenecen a una orden */
+    // 🔹 RELACIÓN CON ORDEN
     public function orden()
     {
-        return $this->belongsTo(OrdenCompra::class, 'orden_compra_id');
-    }
-
-    /* Los detalles pueden ser usandos en multiples elementos de la reposición */
-    public function reposiciones()
-    {
-        return $this->hasMany(ReposicionDetalle::class, 'orden_compra_detalle_id');
+        return $this->belongsTo(
+            Orden::class,
+            'orden_compra_id',  // FK en esta tabla
+            'id'                // PK en la tabla ordenes
+        );
     }
 }

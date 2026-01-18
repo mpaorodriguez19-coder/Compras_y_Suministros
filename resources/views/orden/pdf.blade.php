@@ -14,7 +14,7 @@
         .titulo-centro {
             text-align: center;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 15px;
         }
 
         .tabla-header {
@@ -24,6 +24,7 @@
 
         .tabla-header td {
             vertical-align: top;
+            padding: 4px;
         }
 
         .tabla-detalle {
@@ -32,48 +33,57 @@
             margin-top: 15px;
         }
 
-        .tabla-detalle th, .tabla-detalle td {
+        .tabla-detalle th,
+        .tabla-detalle td {
             border: 1px solid black;
             padding: 5px;
             font-size: 12px;
             text-align: center;
         }
 
+        .tabla-detalle td.desc {
+            text-align: left;
+        }
+
         .subtotales {
             width: 40%;
             float: right;
             margin-top: 10px;
-            border: 1px solid black;
-            padding: 10px;
+            border-collapse: collapse;
         }
 
         .subtotales td {
-            padding: 3px;
+            border: 1px solid black;
+            padding: 5px;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
 
-<div class="titulo-centro">
-    MUNICIPALIDAD DE DANLÍ, EL PARAÍSO<br>
-    Departamento de El Paraíso, Honduras, C.A.<br>
-    Teléfonos: 2763-2080 / 2763-2405 &nbsp;&nbsp;&nbsp; Fax: 2763-2638<br>
-    <h3>ORDEN DE COMPRA No. {{ $orden->id }}</h3>
-</div>
+<table width="100%" style="margin-bottom:10px;">
+    <tr>
+        <td width="20%" align="left">
+            <img src="{{ public_path('imagenes/logo_izq.png') }}" width="80">
+        </td>
 
-<table class="tabla-header">
-    <tr>
-        <td><strong>LUGAR:</strong> {{ $orden->lugar }}</td>
-        <td><strong>FECHA:</strong> {{ \Carbon\Carbon::parse($orden->fecha)->format('d/m/Y') }}</td>
-    </tr>
-    <tr>
-        <td colspan="2"><strong>A:</strong> {{ $orden->proveedor }}</td>
+        <td width="60%" align="center" class="titulo-centro">
+            MUNICIPALIDAD DE DANLÍ, EL PARAÍSO<br>
+            Departamento de El Paraíso, Honduras, C.A.<br>
+            Tel: 2763-2080 / 2763-2405<br><br>
+            <strong>ORDEN DE COMPRA No. {{ $orden->numero }}</strong>
+        </td>
+
+        <td width="20%" align="right">
+            <img src="{{ public_path('imagenes/logo_der.png') }}" width="80">
+        </td>
     </tr>
 </table>
 
 <p>
     Estimados señores:<br>
-    Agradecemos entregar los materiales o prestar los servicios indicados en el siguiente cuadro:
+    Agradecemos entregar los materiales o prestar los servicios indicados
+    en el siguiente cuadro:
 </p>
 
 <table class="tabla-detalle">
@@ -83,76 +93,63 @@
             <th>DESCRIPCIÓN</th>
             <th>UNIDAD</th>
             <th>CANTIDAD</th>
-            <th>PRECIO U.</th>
+            <th>PRECIO L.</th>
             <th>VALOR L.</th>
         </tr>
     </thead>
     <tbody>
-
-@php
-    $subTotal = 0;
-    $descuentoTotal = 0;
-@endphp
-
-@foreach ($orden->items as $i => $item)
-@php
-    $subTotal += $item->cantidad * $item->precio_unitario;
-    $descuentoTotal += $item->descuento;
-@endphp
-<tr>
-    <td>{{ $i + 1 }}</td>
-    <td style="text-align:left">{{ $item->descripcion }}</td>
-    <td>{{ $item->unidad }}</td>
-    <td>{{ $item->cantidad }}</td>
-    <td>{{ number_format($item->precio_unitario, 2) }}</td>
-    <td>{{ number_format($item->valor, 2) }}</td>
-</tr>
-@endforeach
-
+        @foreach ($orden->items as $i => $item)
+        <tr>
+            <td>{{ $i + 1 }}</td>
+            <td class="desc">{{ $item->descripcion }}</td>
+            <td>{{ $item->unidad }}</td>
+            <td>{{ $item->cantidad }}</td>
+            <td>{{ number_format($item->precio_unitario, 2) }}</td>
+            <td>{{ number_format($item->valor, 2) }}</td>
+        </tr>
+        @endforeach
     </tbody>
 </table>
 
-@php
-    $impuesto = $subTotal * 0.15;
-    $total = $subTotal - $descuentoTotal + $impuesto;
-@endphp
-
 <table class="subtotales">
     <tr>
-        <td><strong>Sub - Total L.</strong></td>
-        <td>{{ number_format($subTotal, 2) }}</td>
+        <td><strong>Sub Total</strong></td>
+        <td>L. {{ number_format($orden->subtotal, 2) }}</td>
     </tr>
     <tr>
         <td><strong>Descuento</strong></td>
-        <td>{{ number_format($descuentoTotal, 2) }}</td>
+        <td>L. {{ number_format($orden->descuento, 2) }}</td>
     </tr>
     <tr>
-        <td><strong>Impuesto (15%)</strong></td>
-        <td>{{ number_format($impuesto, 2) }}</td>
+        <td><strong>Impuesto</strong></td>
+        <td>L. {{ number_format($orden->impuesto, 2) }}</td>
     </tr>
     <tr>
-        <td><strong>Total Pago</strong></td>
-        <td><strong>{{ number_format($total, 2) }}</strong></td>
+        <td><strong>Total</strong></td>
+        <td><strong>L. {{ number_format($orden->total, 2) }}</strong></td>
     </tr>
 </table>
 
 <div style="clear: both;"></div>
 
-<p>UTILIZADOS POR: {{ $orden->lugar }}</p>
-<p>SOLICITADO POR: {{ $orden->solicitado_por }}</p>
+<br><br>
+
+<p><strong>SOLICITADO POR:</strong> {{ $orden->solicitante->name ?? '—' }}</p>
 
 <br><br>
 
 <table width="100%">
     <tr>
-        <td>_____________________________<br>Jefe de Compras</td>
-        <td>_____________________________<br>Gerente Administrativo</td>
-        <td>_____________________________<br>Alcalde Municipal</td>
+        <td style="text-align:center">
+            _____________________________<br>
+            Elaborado por
+        </td>
+        <td style="text-align:center">
+            _____________________________<br>
+            Autorizado
+        </td>
     </tr>
 </table>
 
 </body>
 </html>
-
-
-
